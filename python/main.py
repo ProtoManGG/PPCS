@@ -1,11 +1,16 @@
-from flask import Flask
+from flask import Flask,request
 
 flask_object = Flask(__name__)
 
 
-@flask_object.route('/', methods=['GET'])
+@flask_object.route('/', methods=['POST'])
 def index():
-    return 'hello'
+    data = request.json()
+    if data:
+        print(data)
+        return 'Done'
+    else:
+        return 'No data found'
 
 
 if __name__ == "__main__":
