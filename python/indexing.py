@@ -42,6 +42,7 @@ current_time = now.strftime("%H:%M:%S")
 if current_time!= '03:00:00':
     os.remove('complete.csv')
     download_dataset() 
+    
        
 indexing()    
 
