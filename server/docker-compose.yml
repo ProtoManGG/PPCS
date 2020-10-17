@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+    api:
+        build: api/.
+        container_name: api
+        network_mode: "host"
+
+    live-update:
+        build: live-update/.
+        container_name: live-update
+        network_mode: "host"
