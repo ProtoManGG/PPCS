@@ -1,6 +1,15 @@
 version: '3'
 
 services:
+    postgresql:
+        image: postgres
+        container_name: jarvisdb
+        ports:
+             - "5432:5432"
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: qwertyuiop
+            POSTGRES_DB: jarvis
     api:
         build: api/.
         container_name: api
