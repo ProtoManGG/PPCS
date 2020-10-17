@@ -16,7 +16,8 @@ while True:
         a[5]=round(random.uniform(28.4567,28.8902),4)
         a[6]=round(random.uniform(77.0012,77.3456),4)
         cursor.execute("UPDATE User_Data set lat = %s,long=%s where id = %s", (a[5],a[6],a[0]))
-    connection.commit()       
+    connection.commit()   
+    print("updated")    
        
 cursor.close()
 connection.close()                         
