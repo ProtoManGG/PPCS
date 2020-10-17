@@ -3,6 +3,10 @@ import random
 import time
 import random
 import string
+import time
+
+time.sleep(20)
+print("Running live-updates")
 
 connection = psycopg2.connect(host="localhost", port=5432,
                             database="post-pandemic-db", user="postgres", password="7878")

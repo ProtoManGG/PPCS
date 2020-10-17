@@ -9,6 +9,10 @@ from pydantic import BaseModel
 from sklearn.cluster import KMeans
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
+import time
+
+time.sleep(20)
+print("Running Api")
 
 connection = psycopg2.connect(host="localhost", port=5432,
                             database="post-pandemic-db", user="postgres", password="7878")
