@@ -16,7 +16,15 @@ def get_hotspot(lat,longi):
     loc_data = cursor.fetchall()
     kmean=KMeans(n_clusters=10)
     kmean.fit(loc_data)
-    print(kmean.cluster_centers_.tolist())
+    crowd_list = kmean.cluster_centers_.tolist()
+    crowd_new_list = []
+    for i in crowd_list:
+        data = {}
+        data["lat"] = i[0]
+        data["long"] = i[1]
+        crowd_new_list.append(data)
+    print(crowd_new_list)
+        
 
 get_hotspot(28.2345,77.3459)
 

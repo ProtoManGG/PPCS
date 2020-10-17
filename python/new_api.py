@@ -76,6 +76,43 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+def update_user(lat,longi,email):
+    sql_update = f"UPDATE User_Data SET lat = {round(lat,4)},long = {round(longi,4)} WHERE email = '{email}'"
+    cursor.execute(sql_update)
+    connection.commit()
+
+def calculate_covid_hotspot(lat,longi):
+    query = f"SELECT lat,long,death,active,recovered FROM Hotspot WHERE (lat BETWEEN {lat-0.05} AND {lat+0.05}) AND (long BETWEEN {longi-0.05} AND {longi+0.05})"
+    cursor.execute(query)
+    loc_data = cursor.fetchall()
+    return_data = []
+    if loc_data!= []:
+        for i in loc_data:
+            return_dict = {}
+            return_dict["lat"] = i[0]
+            return_dict["long"] = i[1]
+            return_dict["death"] = i[2]
+            return_dict["active"] = i[3]
+            return_dict["recovered"] = i[4]
+            return_data.append(return_dict)
+    return return_data
+
+def calculate_crowd_hotspot(lat,longi):
+    sql = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.05} AND {lat+0.05}) AND (long BETWEEN {longi-0.05} AND {longi+0.05})"
+    cursor.execute(sql)
+    crowd_data = cursor.fetchall()
+    return_crowd_data = []
+    if crowd_data!=[]:
+        kmean=KMeans(n_clusters=10)
+        kmean.fit(crowd_data)
+        data = kmean.cluster_centers_.tolist()
+        for i in data:
+            data_dict = {}
+            data_dict["lat"] = i[0]
+            data_dict["long"] = i[1]
+            return_crowd_data.append(data_dict)
+    return return_crowd_data
+
 @app.post('/signup',response_model = Token)
 async def signup_get_token(user:User):
     cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user.email}'")
@@ -127,38 +164,15 @@ async def get_covid_hotspot(action : Action):
             detail="You are not Authorized",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    sql_update = f"UPDATE User_Data SET lat = {round(action.lat,4)},long = {round(action.longi,4)} WHERE email = '{user['sub']}'"
-    cursor.execute(sql_update)
-    connection.commit()
-    query = f"SELECT lat,long,death,active,recovered FROM Hotspot WHERE (lat BETWEEN {action.lat-0.05} AND {action.lat+0.05}) AND (long BETWEEN {action.longi-0.05} AND {action.longi+0.05})"
-    cursor.execute(query)
-    loc_data = cursor.fetchall()
-    return_data = []
-    if loc_data!= []:
-        for i in loc_data:
-            return_dict = {}
-            return_dict["lat"] = i[0]
-            return_dict["long"] = i[1]
-            return_dict["death"] = i[2]
-            return_dict["active"] = i[3]
-            return_dict["recovered"] = i[4]
-            return_data.append(return_dict)
-    sql = f'''SELECT lat,long FROM User_Data WHERE (lat BETWEEN {action.lat-0.5} AND {action.lat+0.5}) AND (long BETWEEN {action.longi-0.5} AND {action.longi+0.5})'''
-    cursor.execute(sql)
-    crowd_data = cursor.fetchall()
-    crowd_data = []
-    if crowd_data!=[]:
-        kmean=KMeans(n_clusters=10)
-        kmean.fit(crowd_data)
-        crowd_data = kmean.cluster_centers_.tolist()
+    update_user(action.lat,action.longi,user['sub'])
+    return_data = calculate_covid_hotspot(action.lat,action.longi)
+    crowd_data = calculate_crowd_hotspot(action.lat,action.longi)
     access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
-    print(return_data,len(return_data))
-    print("")
-    print("")
-    print(crowd_data,len(crowd_data))
+    print("Covid Hotspots :",len(return_data))
+    print("Crowd Hotspots :",len(crowd_data))
     return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
     
 if __name__ == "__main__":
