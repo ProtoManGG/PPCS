@@ -171,8 +171,6 @@ async def get_covid_hotspot(action : Action):
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
-    print("Covid Hotspots :",len(return_data))
-    print("Crowd Hotspots :",len(crowd_data))
     return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
     
 if __name__ == "__main__":
