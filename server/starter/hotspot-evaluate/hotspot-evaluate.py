@@ -48,5 +48,5 @@ for message in consumer:
     longi=location[1]
     covid_hotspot=calculate_covid_hotspot(lat,longi)
     crowd_hotspot=calculate_crowd_hotspot(lat,longi)
-    producer.send("get-hotspot-out",str(covid_hotspot)+"-"+str(crowd_hotspot))    
+    producer.send("get-hotspot-out",str(str(covid_hotspot)+"-"+str(crowd_hotspot)).encode("utf-8"))    
 

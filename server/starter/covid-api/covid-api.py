@@ -141,7 +141,7 @@ async def get_covid_hotspot(action : Action):
             headers={"WWW-Authenticate": "Bearer"},
         )
     update_user(action.lat,action.longi,user['sub'])
-    producer.send("get-hotspot-in",str(action.lat)+","+str(action.longi))
+    producer.send("get-hotspot-in",str(str(action.lat)+","+str(action.longi)).encode("utf-8"))
     for message in consumer:
         hotspots=message.value.decode("utf-8").split("-")
         return_data = list(eval(hotspots[0]))
