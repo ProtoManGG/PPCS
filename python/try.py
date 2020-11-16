@@ -1,32 +1,32 @@
 # import pandas as pd
 # import numpy as np 
 # import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-import psycopg2
+# from sklearn.cluster import KMeans
+# import psycopg2
 
-connection = psycopg2.connect(host="localhost", port=5432,
-                            database="post-pandemic-db", user="postgres", password="7878")
-cursor = connection.cursor()
+# connection = psycopg2.connect(host="localhost", port=5432,
+#                             database="post-pandemic-db", user="postgres", password="7878")
+# cursor = connection.cursor()
 
-def get_hotspot(lat,longi):
-    sql = f'''SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.5} AND {lat+0.5}) AND (long BETWEEN {longi-0.5} AND {longi+0.5})'''
+# def get_hotspot(lat,longi):
+#     sql = f'''SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.5} AND {lat+0.5}) AND (long BETWEEN {longi-0.5} AND {longi+0.5})'''
 
-    # sql = f'''SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.2} AND {lat+0.2}) AND (long BETWEEN {longi-0.2} AND {longi+0.2})'''
-    cursor.execute(sql)
-    loc_data = cursor.fetchall()
-    kmean=KMeans(n_clusters=10)
-    kmean.fit(loc_data)
-    crowd_list = kmean.cluster_centers_.tolist()
-    crowd_new_list = []
-    for i in crowd_list:
-        data = {}
-        data["lat"] = i[0]
-        data["long"] = i[1]
-        crowd_new_list.append(data)
-    print(crowd_new_list)
+#     # sql = f'''SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.2} AND {lat+0.2}) AND (long BETWEEN {longi-0.2} AND {longi+0.2})'''
+#     cursor.execute(sql)
+#     loc_data = cursor.fetchall()
+#     kmean=KMeans(n_clusters=10)
+#     kmean.fit(loc_data)
+#     crowd_list = kmean.cluster_centers_.tolist()
+#     crowd_new_list = []
+#     for i in crowd_list:
+#         data = {}
+#         data["lat"] = i[0]
+#         data["long"] = i[1]
+#         crowd_new_list.append(data)
+#     print(crowd_new_list)
         
 
-get_hotspot(28.2345,77.3459)
+# get_hotspot(28.2345,77.3459)
 
 # from jose import jwt
 

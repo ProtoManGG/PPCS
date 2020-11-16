@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+    zookeeper:
+            image: wurstmeister/zookeeper
+            container_name: zookeeper
+            ports: 
+                - "2181:2181"
+
+    kafka:
+        image: wurstmeister/kafka
+        container_name: kafka
+        ports: 
+            - "9092:9092"
+        environment: 
+            KAFKA_ADVERTISED_HOST_NAME: localhost
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            
     postgresql:
         image: postgres
         container_name: post-pandemic-db
@@ -10,6 +25,7 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: 7878
             POSTGRES_DB: post-pandemic-db
+
     api:
         build: covid-api/.
         container_name: covid-api
