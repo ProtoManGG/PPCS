@@ -25,13 +25,3 @@ services:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: 7878
             POSTGRES_DB: post-pandemic-db
-
-    api:
-        build: covid-api/.
-        container_name: covid-api
-        network_mode: "host"
-
-    live-update:
-        build: live-update/.
-        container_name: live-update
-        network_mode: "host"

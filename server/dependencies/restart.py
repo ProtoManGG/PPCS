@@ -1,17 +1,19 @@
 import psycopg2
 import random
 import string
-# from kafka.admin import KafkaAdminClient, NewTopic
+from kafka.admin import KafkaAdminClient, NewTopic
 
 connection = psycopg2.connect(host="localhost", port=5432,
                             database="post-pandemic-db", user="postgres", password="7878")
 cursor = connection.cursor()  
 
-# admin_client = KafkaAdminClient(bootstrap_servers="localhost:9092")
+admin_client = KafkaAdminClient(bootstrap_servers="localhost:9092")
 
-# topic_list = []
-# topic_list.append(NewTopic(name='get-hotspot', num_partitions=1, replication_factor=1))
-# admin_client.create_topics(new_topics=topic_list, validate_only=False)
+topic_list = []
+topic_list.append(NewTopic(name='get-hotspot-in', num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name='get-hotspot-out', num_partitions=1, replication_factor=1))
+
+admin_client.create_topics(new_topics=topic_list, validate_only=False)
 
 class UserModel:
     def __init__(self):
@@ -73,8 +75,14 @@ class UserModel:
         connection.commit()
         print('Table Created ..')
         
+def create_data():
+    user = UserModel()
+    user.create_user_table()
+    user.create_hotspot_table()
+    user.create_dummy_data()
 
-user = UserModel()
-user.create_user_table()
-user.create_hotspot_table()
-user.create_dummy_data()
+inp = input("Do you want create data? (y/n): ")
+if inp == 'y':
+    create_data()
+else:
+    print('kafka-topic created without data')

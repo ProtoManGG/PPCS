@@ -1,5 +1,6 @@
 import psycopg2
 import random
+import time
 
 connection = psycopg2.connect(host="localhost", port=5432,
                             database="post-pandemic-db", user="postgres", password="7878")
