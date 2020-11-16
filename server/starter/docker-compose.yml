@@ -12,6 +12,6 @@ services:
         network_mode: "host"
     
     hotspot-evaluate:
-        build: live-update/.
-        container_name: live-update
+        build: hotspot-evaluate/.
+        container_name: hotspot-evaluate
         network_mode: "host"
