@@ -36,9 +36,13 @@ def calculate_crowd_hotspot(lat,longi):
         data = kmean.cluster_centers_.tolist()
         for i in data:
             data_dict = {}
-            data_dict["lat"] = i[0]
-            data_dict["long"] = i[1]
-            return_crowd_data.append(data_dict)
+            sql1 = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {i[0]-0.01} AND {i[0]+0.01}) AND (long BETWEEN {i[1]-0.01} AND {i[1]+0.01})"
+            cursor.execute(sql1)
+            crowd_data_medians = cursor.fetchall()
+            if len(crowd_data_medians)>25:
+                data_dict["lat"] = i[0]
+                data_dict["long"] = i[1]
+                return_crowd_data.append(data_dict)
     return return_crowd_data
 
 
