@@ -2,7 +2,7 @@ import psycopg2
 from sklearn.cluster import KMeans
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
-import numpy as np
+
 consumer = KafkaConsumer("get-hotspot-in")
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 connection = psycopg2.connect(host="localhost", port=5432,
@@ -31,7 +31,7 @@ def calculate_crowd_hotspot(lat,longi):
     crowd_data = cursor.fetchall()
     return_crowd_data = []
     kmean=KMeans(n_clusters=10)
-    if np.array(crowd_data).ndim == 2: 
+    if len(crowd_data)>10:
         kmean.fit(crowd_data)
         data = kmean.cluster_centers_.tolist()
         for i in data:

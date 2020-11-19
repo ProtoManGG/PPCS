@@ -55,27 +55,26 @@ def calculate_crowd_hotspot(lat,longi):
     sql = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.05} AND {lat+0.05}) AND (long BETWEEN {longi-0.05} AND {longi+0.05})"
     cursor.execute(sql)
     crowd_data = cursor.fetchall()
-    
     return_crowd_data = []
     kmean=KMeans(n_clusters=10)
-    if np.array(crowd_data).ndim == 2: 
+    if len(crowd_data)>10:
         kmean.fit(crowd_data)
-    # data = kmean.cluster_centers_.tolist()
+    data = kmean.cluster_centers_.tolist()
 
     
-    # for i in data:
-    #     data_dict = {}
-    #     sql1 = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {i[0]-0.01} AND {i[0]+0.01}) AND (long BETWEEN {i[1]-0.01} AND {i[1]+0.01})"
-    #     cursor.execute(sql1)
-    #     crowd_data1 = cursor.fetchall()
-    #     if len(crowd_data1)>25:
-    #         data_dict["lat"] = i[0]
-    #         data_dict["long"] = i[1]
-    #         return_crowd_data.append(data_dict)
+    for i in data:
+        data_dict = {}
+        sql1 = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {i[0]-0.01} AND {i[0]+0.01}) AND (long BETWEEN {i[1]-0.01} AND {i[1]+0.01})"
+        cursor.execute(sql1)
+        crowd_data1 = cursor.fetchall()
+        if len(crowd_data1)>25:
+            data_dict["lat"] = i[0]
+            data_dict["long"] = i[1]
+            return_crowd_data.append(data_dict)
     return return_crowd_data
 
 
-print(calculate_crowd_hotspot(-28.5678,77.1234),len(calculate_crowd_hotspot(-28.5678,77.1234)))
+print(calculate_crowd_hotspot(28.5678,77.1234),len(calculate_crowd_hotspot(28.5678,77.1234)))
 
 
 
