@@ -44,7 +44,7 @@ class RegisterController extends GetxController {
       });
     } on DioError catch (e) {
       state.value = RegisterState.loaded;
-      failure = "${e.response.data['detail']} 🐱‍🚀 ${e.response.statusCode}";
+      failure = "${e.response.data} 🐱‍🚀 ${e.response.statusCode}";
     } on SocketException {
       state.value = RegisterState.loaded;
       failure = 'No Internet connection 😑';

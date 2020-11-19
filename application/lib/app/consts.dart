@@ -21,7 +21,7 @@ class Styling {
     ),
   );
 
-  static const String kBaseUrl = "http://192.168.0.112:8000/";
+  static const String kBaseUrl = "http://192.168.0.110:8000/";
 }
 
 final style = Styling();
