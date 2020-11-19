@@ -30,7 +30,8 @@ def calculate_crowd_hotspot(lat,longi):
     cursor.execute(sql)
     crowd_data = cursor.fetchall()
     return_crowd_data = []
-    if crowd_data!=[]:
+    # print(crowd_data)
+    if len(crowd_data) > 0:
         kmean=KMeans(n_clusters=10)
         kmean.fit(crowd_data)
         data = kmean.cluster_centers_.tolist()
