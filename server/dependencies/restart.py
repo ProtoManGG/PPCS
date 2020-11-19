@@ -1,16 +1,19 @@
 import psycopg2
 import random
-import time
-import random
 import string
-import time
-
-time.sleep(20)
-print("Running live-updates")
+from kafka.admin import KafkaAdminClient, NewTopic
 
 connection = psycopg2.connect(host="localhost", port=5432,
                             database="post-pandemic-db", user="postgres", password="7878")
 cursor = connection.cursor()  
+
+admin_client = KafkaAdminClient(bootstrap_servers="localhost:9092")
+
+topic_list = []
+topic_list.append(NewTopic(name='get-hotspot-in', num_partitions=1, replication_factor=1))
+topic_list.append(NewTopic(name='get-hotspot-out', num_partitions=1, replication_factor=1))
+
+admin_client.create_topics(new_topics=topic_list, validate_only=False)
 
 class UserModel:
     def __init__(self):
@@ -32,14 +35,14 @@ class UserModel:
     def create_dummy_data(self):
         for i in range(10000):
             username = ''
-            for i in range(random.choice([3,7,9,5])):
+            for j in range(random.choice([3,7,9,5])):
                 username+=random.choice(list(string.ascii_lowercase))
             phone_no = random.randint(9000000000,9999999999)
             password = ''
-            for i in range(random.choice([13,7,9,10])):
+            for j in range(random.choice([13,7,9,10])):
                 password+=random.choice(list(string.ascii_lowercase))
             email = ''
-            for i in range(random.choice([3,7,9,5])):
+            for j in range(random.choice([3,7,9,5])):
                 email+=random.choice(list(string.ascii_lowercase))
             email+='@gmail.com'
             lat = round(random.uniform(28.4567,28.8902),4)
@@ -72,24 +75,14 @@ class UserModel:
         connection.commit()
         print('Table Created ..')
         
+def create_data():
+    user = UserModel()
+    user.create_user_table()
+    user.create_hotspot_table()
+    user.create_dummy_data()
 
-user = UserModel()
-user.create_user_table()
-user.create_hotspot_table()
-user.create_dummy_data()
-
-while True:   
-    time.sleep(5) 
-    sql="Select * from User_Data order by random() limit 100"
-    cursor.execute(sql)
-    user_records = cursor.fetchall() 
-    for i in user_records:
-        a=list(i)
-        a[5]=round(random.uniform(28.4567,28.8902),4)
-        a[6]=round(random.uniform(77.0012,77.3456),4)
-        cursor.execute("UPDATE User_Data set lat = %s,long=%s where id = %s", (a[5],a[6],a[0]))
-    connection.commit()   
-    print("updated")    
-       
-cursor.close()
-connection.close()                         
+inp = input("Do you want create data? (y/n): ")
+if inp == 'y':
+    create_data()
+else:
+    print('kafka-topic created without data')

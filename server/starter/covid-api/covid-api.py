@@ -6,12 +6,16 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
-from sklearn.cluster import KMeans
 from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
-import time
+from kafka import KafkaProducer
+from kafka import KafkaConsumer
 
-time.sleep(20)
+consumer = KafkaConsumer("get-hotspot-out")
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+# import time
+
+# time.sleep(20)
 print("Running Api")
 
 connection = psycopg2.connect(host="localhost", port=5432,
@@ -33,7 +37,7 @@ app.add_middleware(
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_HOURS = 10
+ACCESS_TOKEN_EXPIRE_HOURS = 100
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -84,38 +88,6 @@ def update_user(lat,longi,email):
     sql_update = f"UPDATE User_Data SET lat = {round(lat,4)},long = {round(longi,4)} WHERE email = '{email}'"
     cursor.execute(sql_update)
     connection.commit()
-
-def calculate_covid_hotspot(lat,longi):
-    query = f"SELECT lat,long,death,active,recovered FROM Hotspot WHERE (lat BETWEEN {lat-0.05} AND {lat+0.05}) AND (long BETWEEN {longi-0.05} AND {longi+0.05})"
-    cursor.execute(query)
-    loc_data = cursor.fetchall()
-    return_data = []
-    if loc_data!= []:
-        for i in loc_data:
-            return_dict = {}
-            return_dict["lat"] = i[0]
-            return_dict["long"] = i[1]
-            return_dict["death"] = i[2]
-            return_dict["active"] = i[3]
-            return_dict["recovered"] = i[4]
-            return_data.append(return_dict)
-    return return_data
-
-def calculate_crowd_hotspot(lat,longi):
-    sql = f"SELECT lat,long FROM User_Data WHERE (lat BETWEEN {lat-0.05} AND {lat+0.05}) AND (long BETWEEN {longi-0.05} AND {longi+0.05})"
-    cursor.execute(sql)
-    crowd_data = cursor.fetchall()
-    return_crowd_data = []
-    if crowd_data!=[]:
-        kmean=KMeans(n_clusters=10)
-        kmean.fit(crowd_data)
-        data = kmean.cluster_centers_.tolist()
-        for i in data:
-            data_dict = {}
-            data_dict["lat"] = i[0]
-            data_dict["long"] = i[1]
-            return_crowd_data.append(data_dict)
-    return return_crowd_data
 
 @app.post('/signup',response_model = Token)
 async def signup_get_token(user:User):
@@ -169,13 +141,16 @@ async def get_covid_hotspot(action : Action):
             headers={"WWW-Authenticate": "Bearer"},
         )
     update_user(action.lat,action.longi,user['sub'])
-    return_data = calculate_covid_hotspot(action.lat,action.longi)
-    crowd_data = calculate_crowd_hotspot(action.lat,action.longi)
-    access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
-    access_token = create_access_token(
-        data={"sub": user['sub']}, expires_delta=access_token_expires
-    )
-    return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
+    producer.send("get-hotspot-in",str(str(action.lat)+","+str(action.longi)).encode("utf-8"))
+    for message in consumer:
+        hotspots=message.value.decode("utf-8").split("-")
+        return_data = list(eval(hotspots[0]))
+        crowd_data = list(eval(hotspots[1]))
+        access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+        access_token = create_access_token(
+            data={"sub": user['sub']}, expires_delta=access_token_expires
+        )
+        return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
     
 if __name__ == "__main__":
     uvicorn.run(app,host = '0.0.0.0', port = 8000)
