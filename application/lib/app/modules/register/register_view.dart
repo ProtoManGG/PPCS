@@ -157,11 +157,8 @@ class RegisterView extends GetView<RegisterController> {
                   ),
                 ),
                 Obx(() {
-                  if (controller.currentState.value == AppState.initial) {
-                    return const Text('Press the button 👇');
-                  } else if (controller.currentState.value ==
-                      AppState.loading) {
-                    return const CircularProgressIndicator();
+                  if (controller.currentState.value == AppState.loading) {
+                    return const Center(child: CircularProgressIndicator());
                   } else if (controller.currentState.value == AppState.loaded) {
                     Future.delayed(
                       Duration.zero,
@@ -169,7 +166,7 @@ class RegisterView extends GetView<RegisterController> {
                         Get.offAllNamed(Routes.MAP);
                       },
                     );
-                    return Text(controller.data);
+                    return const SizedBox.shrink();
                   } else {
                     return Text(controller.data);
                   }

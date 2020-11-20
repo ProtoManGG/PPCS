@@ -10,7 +10,7 @@ class LoginController extends GetxController {
   LoginController({@required this.repository});
 
   final currentState = AppState.initial.obs;
-  String data = 'Initial';
+  String data = 'Press the button 👇';
 
   Future<void> login(
       {@required String email, @required String password}) async {
@@ -22,7 +22,6 @@ class LoginController extends GetxController {
         password: password,
       );
       _storage.box.write(storageKey, body["access_token"]);
-      data = body.toString();
       currentState.value = AppState.loaded;
     } on Failure catch (f) {
       data = f.toString();
