@@ -15,10 +15,6 @@ class LoginView extends GetView<LoginController> {
     String _password;
     final RxBool _showPassword = false.obs;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('LoginView'),
-      //   centerTitle: true,
-      // ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Get.width * .05,
