@@ -4,8 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
 
-import '../../consts.dart' as style;
 
 enum RegisterState { initial, loading, loaded }
 
@@ -25,7 +25,7 @@ class RegisterController extends GetxController {
       // final MapController mapController = Get.put(MapController());
       state.value = RegisterState.loading;
       await Dio().post(
-        '${style.Styling.kBaseUrl}signup',
+        '$baseUrl/signup',
         data: {
           // "lat": mapController.locationData.value.latitude,
           // "longi": mapController.locationData.value.longitude,

@@ -1,19 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
 
-import '../../consts.dart';
 import '../../routes/app_pages.dart';
 import 'model/hotspot_model.dart';
 
-const baseUrl = '${Styling.kBaseUrl}covid';
 
 Dio dio = Dio();
 Future<HotSpotModel> locationSender(double latitude, double longitude) async {
   final GetStorage box = GetStorage();
   try {
     final Response response = await dio.post(
-      baseUrl,
+      '$baseUrl/covid',
       data: {
         "lat": latitude,
         "longi": longitude,
