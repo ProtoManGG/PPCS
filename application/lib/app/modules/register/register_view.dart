@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_ecosystem_trial/app/data/providers/api_client.dart';
-import 'package:getx_ecosystem_trial/app/data/repository/repository.dart';
-import 'package:getx_ecosystem_trial/app/shared/location_data_sender.dart';
+import '../../shared/location_data_sender.dart';
 import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/style_constants.dart';
 import '../../routes/app_pages.dart';
 import '../../shared/button.dart';
-import '../map/map_controller.dart';
 import 'register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {
@@ -48,21 +45,23 @@ class RegisterView extends GetView<RegisterController> {
                     children: [
                       Flexible(
                         child: TextFormField(
-                            textInputAction: TextInputAction.next,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) {
-                              if (!GetUtils.isAlphabetOnly(value) ||
-                                  value.length > 20) {
-                                return 'Not a valid First Name';
-                              }
-                              _fullName = value;
-                              return null;
-                            },
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.text,
-                            decoration: style.kInputDecoration.copyWith(
-                                hintText: '', labelText: 'First Name')),
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value) {
+                            if (!GetUtils.isAlphabetOnly(value) ||
+                                value.length > 20) {
+                              return 'Not a valid First Name';
+                            }
+                            _fullName = value;
+                            return null;
+                          },
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.text,
+                          decoration: style.kInputDecoration.copyWith(
+                            hintText: '',
+                            labelText: 'First Name',
+                          ),
+                        ),
                       ),
                       const SizedBox(width: 20),
                       Flexible(

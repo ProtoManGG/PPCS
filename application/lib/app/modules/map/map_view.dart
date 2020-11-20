@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:getx_ecosystem_trial/app/constants/constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../constants/constants.dart';
 import '../../routes/app_pages.dart';
 import 'map_controller.dart';
 

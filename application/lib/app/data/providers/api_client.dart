@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:getx_ecosystem_trial/app/services/services.dart';
 
+import '../../services/services.dart';
 import '../models/failure_model.dart';
 
 class ApiClient {

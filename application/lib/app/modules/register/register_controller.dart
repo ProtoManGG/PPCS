@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:getx_ecosystem_trial/app/constants/constants.dart';
-import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
-import 'package:getx_ecosystem_trial/app/data/repository/repository.dart';
-import 'package:getx_ecosystem_trial/app/services/services.dart';
+
+import '../../constants/constants.dart';
+import '../../data/models/failure_model.dart';
+import '../../data/repository/repository.dart';
+import '../../services/services.dart';
 
 class RegisterController extends GetxController {
   Repository authRepository;

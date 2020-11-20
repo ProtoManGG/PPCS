@@ -3,10 +3,10 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_ecosystem_trial/app/constants/constants.dart';
-import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
-import 'package:getx_ecosystem_trial/app/data/repository/repository.dart';
-import 'package:getx_ecosystem_trial/app/services/services.dart';
+import '../../constants/constants.dart';
+import '../../data/models/failure_model.dart';
+import '../../data/repository/repository.dart';
+import '../../services/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
