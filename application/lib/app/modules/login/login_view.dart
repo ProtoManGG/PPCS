@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_ecosystem_trial/app/constants/constants.dart';
+import 'package:getx_ecosystem_trial/app/constants/style_constants.dart';
 
-import '../../consts.dart';
 import '../../routes/app_pages.dart';
 import '../../shared/button.dart';
 import 'login_controller.dart';
@@ -89,24 +90,20 @@ class LoginView extends GetView<LoginController> {
                 ),
               ),
               Obx(() {
-                if (controller.state.value == LoginState.initial) {
+                if (controller.currentState.value == AppState.initial) {
                   return const Text('Press the button 👇');
-                } else if (controller.state.value == LoginState.loading) {
+                } else if (controller.currentState.value == AppState.loading) {
                   return const CircularProgressIndicator();
-                } else if (controller.state.value == LoginState.loaded) {
-                  if (controller.failure != null) {
-                    return Text(controller.failure);
-                  } else {
-                    Future.delayed(
-                      Duration.zero,
-                      () {
-                        Get.offAllNamed(Routes.MAP);
-                      },
-                    );
-                    return Text(controller.data);
-                  }
+                } else if (controller.currentState.value == AppState.loaded) {
+                  return Text(controller.data);
+                  // Future.delayed(
+                  //   Duration.zero,
+                  //   () {
+                  //     Get.offAllNamed(Routes.MAP);
+                  //   },
+                  // );
                 } else {
-                  return Text(controller.failure);
+                  return Text(controller.data);
                 }
               }),
               Button(
@@ -115,13 +112,7 @@ class LoginView extends GetView<LoginController> {
                 icon: Icons.lock_open,
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
-                    try {
-                      controller.postService(_email, _password);
-                    } catch (e) {
-                      if (!Get.isSnackbarOpen) {
-                        Get.snackbar("Error", e.toString());
-                      }
-                    }
+                    controller.login(email: _email, password: _password);
                   } else {}
                 },
               ),

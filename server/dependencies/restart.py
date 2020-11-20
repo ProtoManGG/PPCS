@@ -81,8 +81,9 @@ def create_data():
     user.create_hotspot_table()
     user.create_dummy_data()
 
-inp = input("Do you want create data? (y/n): ")
-if inp == 'y':
-    create_data()
-else:
-    print('kafka-topic created without data')
+# inp = input("Do you want create data? (y/n): ")
+# if inp == 'y':
+#     create_data()
+# else:
+#     print('kafka-topic created without data')
+create_data()
