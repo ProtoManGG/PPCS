@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getx_ecosystem_trial/app/constants/constants.dart';
-import 'package:getx_ecosystem_trial/app/constants/style_constants.dart';
-import 'package:getx_ecosystem_trial/app/modules/map/map_controller.dart';
+import '../../constants/constants.dart';
+import '../../constants/style_constants.dart';
+import '../map/map_controller.dart';
 import 'package:location/location.dart';
 
 import '../../routes/app_pages.dart';

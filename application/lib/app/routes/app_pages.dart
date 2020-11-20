@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
-import 'package:getx_ecosystem_trial/app/constants/constants.dart';
-import 'package:getx_ecosystem_trial/app/services/services.dart';
 
+import '../constants/constants.dart';
 import '../modules/login/login_binding.dart';
 import '../modules/login/login_view.dart';
 import '../modules/map/map_binding.dart';
 import '../modules/map/map_view.dart';
 import '../modules/register/register_binding.dart';
 import '../modules/register/register_view.dart';
+import '../services/services.dart';
 
 part 'app_routes.dart';
 

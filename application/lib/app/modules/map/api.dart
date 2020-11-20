@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
+import '../../constants/api_constants.dart';
 
 import '../../routes/app_pages.dart';
 import 'model/hotspot_model.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:getx_ecosystem_trial/app/data/providers/api_client.dart';
+
+import '../providers/api_client.dart';
 
 class AuthRepository {
   final ApiClient apiClient;

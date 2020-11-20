@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
-import 'package:getx_ecosystem_trial/app/services/api_service.dart';
+
+import '../../services/api_service.dart';
+import '../models/failure_model.dart';
 
 class ApiClient {
   final _api = ApiService().instance;
