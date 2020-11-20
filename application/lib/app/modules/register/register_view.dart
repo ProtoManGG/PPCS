@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_ecosystem_trial/app/constants/constants.dart';
 import 'package:getx_ecosystem_trial/app/constants/style_constants.dart';
+import 'package:getx_ecosystem_trial/app/modules/map/map_controller.dart';
+import 'package:location/location.dart';
 
 import '../../routes/app_pages.dart';
 import '../../shared/button.dart';
@@ -16,10 +19,6 @@ class RegisterView extends GetView<RegisterController> {
     String _phoneNum;
     final RxBool _showPassword = false.obs;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('RegisterView'),
-      //   centerTitle: true,
-      // ),
       body: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: Get.width * .05,
@@ -155,52 +154,44 @@ class RegisterView extends GetView<RegisterController> {
                   ),
                 ),
                 Obx(() {
-                  if (controller.state.value == RegisterState.initial) {
+                  if (controller.currentState.value == AppState.initial) {
                     return const Text('Press the button 👇');
-                  } else if (controller.state.value == RegisterState.loading) {
+                  } else if (controller.currentState.value ==
+                      AppState.loading) {
                     return const CircularProgressIndicator();
-                  } else if (controller.state.value == RegisterState.loaded) {
-                    if (controller.failure != null) {
-                      return Text(controller.failure);
-                    } else {
-                      Future.delayed(
-                        Duration.zero,
-                        () {
-                          Get.offAllNamed(Routes.MAP);
-                        },
-                      );
-                      return Text(controller.data);
-                    }
+                  } else if (controller.currentState.value == AppState.loaded) {
+                    Future.delayed(
+                      Duration.zero,
+                      () {
+                        Get.offAllNamed(Routes.MAP);
+                      },
+                    );
+                    return Text(controller.data);
                   } else {
                     return Text(controller.data);
                   }
                 }),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Button(
-                    isTextOnly: false,
-                    text: 'Register',
-                    icon: Icons.vpn_key,
-                    onPressed: () async {
-                      if (controller.state.value == RegisterState.initial ||
-                          controller.state.value == RegisterState.loaded) {
-                        if (_formKey.currentState.validate()) {
-                          try {
-                            controller.postService(
-                              phoneNum: _phoneNum,
-                              email: _email,
-                              password: _password,
-                              fullName: _fullName,
-                            );
-                          } catch (e) {
-                            if (!Get.isSnackbarOpen) {
-                              Get.snackbar("Error", e.toString());
-                            }
-                          }
-                        }
-                      } else {}
-                    },
-                  ),
+                Button(
+                  isTextOnly: false,
+                  text: 'Sign Up',
+                  icon: Icons.lock_open,
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      final MapController mapController =
+                          await Get.put(MapController());
+                      final LocationData locationData = await mapController
+                          .sendLocationData()
+                          .then((value) => value);
+                      controller.signUp(
+                        username: _fullName,
+                        phonenum: int.parse(_phoneNum),
+                        email: _email,
+                        password: _password,
+                        longitude: locationData.longitude,
+                        latitude: locationData.latitude,
+                      );
+                    } else {}
+                  },
                 ),
               ],
             ),

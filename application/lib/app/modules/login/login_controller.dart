@@ -64,7 +64,7 @@ class LoginController extends GetxController {
       data = body.toString();
       currentState.value = AppState.loaded;
     } on Failure catch (f) {
-      data = f.message;
+      data = f.toString();
       currentState.value = AppState.failure;
     }
   }
