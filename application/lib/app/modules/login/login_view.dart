@@ -106,7 +106,7 @@ class LoginView extends GetView<LoginController> {
                     return Text(controller.data);
                   }
                 } else {
-                  return Text(controller.data);
+                  return Text(controller.failure);
                 }
               }),
               Button(

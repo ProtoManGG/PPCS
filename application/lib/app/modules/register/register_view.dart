@@ -166,7 +166,7 @@ class RegisterView extends GetView<RegisterController> {
                       Future.delayed(
                         Duration.zero,
                         () {
-                          Get.toNamed(Routes.MAP);
+                          Get.offAllNamed(Routes.MAP);
                         },
                       );
                       return Text(controller.data);

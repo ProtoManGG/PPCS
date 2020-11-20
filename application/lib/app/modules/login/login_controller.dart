@@ -32,7 +32,7 @@ class LoginController extends GetxController {
       if (e.response == null) {
         failure = "${e.error} 🐱‍🚀";
       } else {
-        failure = "${e.response.data['detail']} 🐱‍🚀 ${e.response.statusCode}";
+        failure = "${e.response.data} 🐱‍🚀 ${e.response.statusCode}";
       }
     }
   }
