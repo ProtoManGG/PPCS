@@ -95,13 +95,13 @@ class LoginView extends GetView<LoginController> {
                 } else if (controller.currentState.value == AppState.loading) {
                   return const CircularProgressIndicator();
                 } else if (controller.currentState.value == AppState.loaded) {
+                  Future.delayed(
+                    Duration.zero,
+                    () {
+                      Get.offAllNamed(Routes.MAP);
+                    },
+                  );
                   return Text(controller.data);
-                  // Future.delayed(
-                  //   Duration.zero,
-                  //   () {
-                  //     Get.offAllNamed(Routes.MAP);
-                  //   },
-                  // );
                 } else {
                   return Text(controller.data);
                 }

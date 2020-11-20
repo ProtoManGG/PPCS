@@ -5,10 +5,10 @@ import 'app/routes/app_pages.dart';
 import 'app/services/services.dart';
 
 Future<void> main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
   await initServices();
   runApp(
     GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: "Crowd Safety",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

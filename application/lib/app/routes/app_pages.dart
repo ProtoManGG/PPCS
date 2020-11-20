@@ -13,11 +13,11 @@ part 'app_routes.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class AppPages {
-  static final _storage = StorageService().instance.storageBox();
+  static final _storage = StorageService().instance;
   // final box = ;
 
   static final INITIAL =
-      _storage.hasData(storageKey) ? Routes.MAP : Routes.LOGIN;
+      _storage.box.hasData(storageKey) ? Routes.MAP : Routes.LOGIN;
 
   static final routes = [
     GetPage(

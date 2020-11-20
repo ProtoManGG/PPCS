@@ -11,8 +11,8 @@ class StorageService extends GetxService {
     return this;
   }
 
-   GetStorage storageBox() {
-    final GetStorage box = GetStorage();
-    return box;
-  }
+  //  GetStorage storageBox() {
+  //   final GetStorage box = GetStorage();
+  //   return box;
+  // }
 }
