@@ -99,11 +99,11 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:getx_ecosystem_trial/app/constants/constants.dart';
 import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
-import 'package:getx_ecosystem_trial/app/data/repository/auth_repository.dart';
+import 'package:getx_ecosystem_trial/app/data/repository/repository.dart';
 import 'package:getx_ecosystem_trial/app/services/services.dart';
 
 class RegisterController extends GetxController {
-  AuthRepository authRepository;
+  Repository authRepository;
   RegisterController({@required this.authRepository});
 
   final currentState = AppState.initial.obs;

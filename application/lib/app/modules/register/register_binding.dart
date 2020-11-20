@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../data/providers/api_client.dart';
-import '../../data/repository/auth_repository.dart';
+import '../../data/repository/repository.dart';
 import 'register_controller.dart';
 
 class RegisterBinding extends Bindings {
@@ -9,7 +9,7 @@ class RegisterBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<RegisterController>(
       () => RegisterController(
-        authRepository: AuthRepository(
+        authRepository: Repository(
           apiClient: ApiClient(),
         ),
       ),

@@ -4,19 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' as mobile;
-
-// import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
-// import 'dart:html';
+import 'package:getx_ecosystem_trial/app/constants/constants.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../routes/app_pages.dart';
 import 'map_controller.dart';
 
 class MapView extends GetView<MapController> {
-  final Completer<mobile.GoogleMapController> _controller = Completer();
+  final Completer<GoogleMapController> _controller = Completer();
   @override
   Widget build(BuildContext context) {
-    mobile.GoogleMapController mapController;
+    GoogleMapController mapController;
     String _mapStyle;
     rootBundle.loadString('assets/map_style.txt').then((string) {
       _mapStyle = string;
@@ -37,30 +35,60 @@ class MapView extends GetView<MapController> {
         ],
       ),
       body: SafeArea(
-        child: Obx(
-          () => !controller.isLoaded.value
-              ? const Center(child: CircularProgressIndicator())
-              : mobile.GoogleMap(
-                  initialCameraPosition: mobile.CameraPosition(
-                    target: mobile.LatLng(
-                      controller.locationData.latitude,
-                      controller.locationData.longitude,
-                    ),
-                    zoom: 17,
-                  ),
-                  onMapCreated: (mobile.GoogleMapController controller) {
-                    _controller.complete(controller);
-                    mapController = controller;
-                    mapController.setMapStyle(_mapStyle);
-                  },
-                  circles: Set<mobile.Circle>.of(controller.circleList.values),
-                  myLocationEnabled: true,
-                  onLongPress: (argument) {
-                    controller.isLoaded.value = false;
-                    controller.getHotspotList();
-                  },
+        // child: Obx(
+        //   () => !controller.isLoaded.value
+        //       ? const Center(child: CircularProgressIndicator())
+        //       : GoogleMap(
+        //           initialCameraPosition: CameraPosition(
+        //             target: LatLng(
+        //               controller.locationData.latitude,
+        //               controller.locationData.longitude,
+        //             ),
+        //             zoom: 17,
+        //           ),
+        //           onMapCreated: (GoogleMapController controller) {
+        //             _controller.complete(controller);
+        //             mapController = controller;
+        //             mapController.setMapStyle(_mapStyle);
+        //           },
+        //           circles: Set<Circle>.of(controller.circleList.values),
+        //           myLocationEnabled: true,
+        //           onLongPress: (argument) {
+        //             controller.isLoaded.value = false;
+        //             controller.getHotspotList();
+        //           },
+        //         ),
+        // ),
+        child: Obx(() {
+          if (controller.currentState.value == AppState.initial) {
+            return Text(controller.data);
+          } else if (controller.currentState.value == AppState.loading) {
+            return const CircularProgressIndicator();
+          } else if (controller.currentState.value == AppState.loaded) {
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  controller.locationData.latitude,
+                  controller.locationData.longitude,
                 ),
-        ),
+                zoom: 17,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                mapController = controller;
+                mapController.setMapStyle(_mapStyle);
+              },
+              circles: Set<Circle>.of(controller.circleList.values),
+              myLocationEnabled: true,
+              // onLongPress: (argument) {
+              //   controller.isLoaded.value = false;
+              //   controller.getHotspotList();
+              // },
+            );
+          } else {
+            return Text(controller.data);
+          }
+        }),
       ),
     );
   }

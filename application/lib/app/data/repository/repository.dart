@@ -2,15 +2,10 @@ import 'package:flutter/foundation.dart';
 
 import '../providers/api_client.dart';
 
-class AuthRepository {
+class Repository {
   final ApiClient apiClient;
 
-  AuthRepository({@required this.apiClient})
-      : assert(apiClient != null);
-
-  // Future getHotspotModel(
-  //         {@required double latitude, @required double longitude}) async =>
-  //     apiClient.getHotspotModel(latitude: latitude, longitude: longitude);
+  Repository({@required this.apiClient}) : assert(apiClient != null);
 
   Future login({
     @required String email,
@@ -34,4 +29,16 @@ class AuthRepository {
         longitude: longitude,
         phonenum: phonenum,
       );
+
+  Future getHotSpotZones({
+    @required double latitude,
+    @required double longitude,
+    @required String accessToken,
+  }) async {
+    return apiClient.getHotSpotZones(
+      latitude: latitude,
+      longitude: longitude,
+      accessToken: accessToken,
+    );
+  }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_ecosystem_trial/app/data/providers/api_client.dart';
+import 'package:getx_ecosystem_trial/app/data/repository/repository.dart';
+import 'package:getx_ecosystem_trial/app/shared/location_data_sender.dart';
 import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
@@ -177,11 +180,8 @@ class RegisterView extends GetView<RegisterController> {
                   icon: Icons.lock_open,
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
-                      final MapController mapController =
-                          await Get.put(MapController());
-                      final LocationData locationData = await mapController
-                          .sendLocationData()
-                          .then((value) => value);
+                      final LocationData locationData =
+                          await sendLocationData();
                       controller.signUp(
                         username: _fullName,
                         phonenum: int.parse(_phoneNum),
