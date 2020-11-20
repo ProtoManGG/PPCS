@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx_ecosystem_trial/app/constants/style_constants.dart';
 
-import '../../consts.dart';
 import '../../routes/app_pages.dart';
 import '../../shared/button.dart';
 import 'login_controller.dart';

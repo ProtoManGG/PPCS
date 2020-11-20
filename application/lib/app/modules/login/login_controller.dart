@@ -1,8 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-
-import '../../consts.dart';
+import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
 
 enum LoginState { initial, loading, loaded }
 
@@ -16,7 +15,7 @@ class LoginController extends GetxController {
     try {
       state.value = LoginState.loading;
       await Dio().post(
-        '${Styling.kBaseUrl}login',
+        '$baseUrl/login',
         data: {
           "email": email, //! Encrypt
           "password": password,
