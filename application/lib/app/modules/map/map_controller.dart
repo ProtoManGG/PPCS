@@ -3,14 +3,14 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants/constants.dart';
-import '../../data/models/failure_model.dart';
-import '../../data/repository/repository.dart';
-import '../../services/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+import '../../constants/constants.dart';
+import '../../data/models/failure_model.dart';
 import '../../data/models/hotspot_model.dart';
+import '../../data/repository/repository.dart';
+import '../../services/services.dart';
 import '../../shared/info_dialog.dart';
 import '../../shared/location_data_sender.dart';
 
@@ -35,7 +35,7 @@ class MapController extends GetxController {
 
     locationData = await sendLocationData();
 
-    if (!locationData.isNullOrBlank) {
+    if (!locationData.isBlank) {
       try {
         final _storage = StorageService().instance;
         final body = await repository.getHotSpotZones(
@@ -51,8 +51,7 @@ class MapController extends GetxController {
       }
 
       for (final CoronaHotspot element in hotspotList.coronaHotspot) {
-        final CircleId circleId =
-            CircleId(hotspotList.coronaHotspot.indexOf(element).toString());
+        final CircleId circleId = CircleId(hotspotList.coronaHotspot.indexOf(element).toString());
         circleList[circleId] = Circle(
           circleId: circleId,
           center: LatLng(
@@ -92,8 +91,7 @@ class MapController extends GetxController {
       }
 
       for (final CrowdHotspot element in hotspotList.crowdHotspot) {
-        final CircleId circleId =
-            CircleId(hotspotList.crowdHotspot.indexOf(element).toString());
+        final CircleId circleId = CircleId(hotspotList.crowdHotspot.indexOf(element).toString());
         circleList[circleId] = Circle(
           circleId: circleId,
           center: LatLng(
@@ -108,5 +106,4 @@ class MapController extends GetxController {
       currentState.value = AppState.loaded;
     }
   }
-
 }

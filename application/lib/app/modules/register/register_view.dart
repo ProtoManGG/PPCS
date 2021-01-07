@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../shared/location_data_sender.dart';
 import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/style_constants.dart';
 import '../../routes/app_pages.dart';
 import '../../shared/button.dart';
+import '../../shared/location_data_sender.dart';
 import 'register_controller.dart';
 
 class RegisterView extends GetView<RegisterController> {

@@ -16,8 +16,8 @@ class AppPages {
   static final _storage = StorageService().instance;
   // final box = ;
 
-  static final INITIAL =
-      _storage.box.hasData(storageKey) ? Routes.MAP : Routes.LOGIN;
+  // ignore: non_constant_identifier_names
+  static final INITIAL = _storage.box.hasData(storageKey) ? Routes.MAP : Routes.LOGIN;
 
   static final routes = [
     GetPage(
