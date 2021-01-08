@@ -31,6 +31,8 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 
 ![image](https://drive.google.com/uc?export=view&id=1c_K3WN0z_bcLEg-SHbf0HO7aSS2kdpIK)
 
+<a href="https://drive.google.com/uc?export=view&id=<FILEID>"><img src="https://drive.google.com/uc?export=view&id=1c_K3WN0z_bcLEg-SHbf0HO7aSS2kdpIK" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
+
 ## ⚙ **Core Features:**
 
 ### 📮 Data Collection
