@@ -21,7 +21,7 @@ class Button extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: FlatButton(
-        padding: const EdgeInsets.all(13),
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 20),
         color: color,
         splashColor: Colors.deepOrangeAccent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(45)),

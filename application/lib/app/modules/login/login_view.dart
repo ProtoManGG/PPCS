@@ -11,14 +11,16 @@ class LoginView extends GetView<LoginController> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final double width = Get.width;
+    final double height = Get.height;
     String _email;
     String _password;
     final RxBool _showPassword = false.obs;
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: Get.width * .05,
-          vertical: Get.height * 0.07,
+          horizontal: GetPlatform.isWeb ? width * .18 : width * .05,
+          vertical: height * 0.07,
         ),
         child: Form(
           key: _formKey,
@@ -28,13 +30,13 @@ class LoginView extends GetView<LoginController> {
                 child: Hero(
                   tag: 'logo',
                   child: SizedBox(
-                    height: Get.height * .3,
+                    height: height * .3,
                     child: Image.asset('assets/icons/icon.png'),
                   ),
                 ),
               ),
               SizedBox(
-                height: Get.height * .05,
+                height: height * .05,
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -77,9 +79,7 @@ class LoginView extends GetView<LoginController> {
                         icon: _showPassword.value
                             ? const Icon(Icons.visibility)
                             : const Icon(Icons.visibility_off),
-                        onPressed: () {
-                          _showPassword.value = !_showPassword.value;
-                        },
+                        onPressed: () => _showPassword.toggle(),
                       ),
                     ),
                   ),
@@ -89,12 +89,7 @@ class LoginView extends GetView<LoginController> {
                 if (controller.currentState.value == AppState.loading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (controller.currentState.value == AppState.loaded) {
-                  Future.delayed(
-                    Duration.zero,
-                    () {
-                      Get.offAllNamed(Routes.MAP);
-                    },
-                  );
+                  Future.delayed(Duration.zero, () => Get.offAllNamed(Routes.MAP));
                   return const SizedBox.shrink();
                 } else {
                   return Text(controller.data);

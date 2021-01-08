@@ -9,7 +9,7 @@ Future<void> main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Crowd Safety",
+      title: "Post Pandemic Crowd Safety",
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: ThemeData.dark(),

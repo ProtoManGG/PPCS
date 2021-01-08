@@ -1,0 +1,24 @@
+{
+  "corona_hotspot": [
+    {
+      "lat": 28.8152,
+      "long": 77.222,
+      "death": 44,
+      "active": 23,
+      "recovered": 11
+    },
+    {
+      "lat": 28.5617,
+      "long": 77.2599,
+      "death": 61,
+      "active": 35,
+      "recovered": 69
+    }
+  ],
+  "crowd_hotspot": [
+    {
+      "lat": 28.8152,
+      "long": 77.222
+    }
+  ]
+}
