@@ -27,7 +27,9 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 
 ## 📺 _**Demo Gif**_
 
-<img src="extras\Demo.gif" alt="Video Preview" width="40%" />
+<img src="https://drive.google.com/uc?export=view&id=1c_K3WN0z_bcLEg-SHbf0HO7aSS2kdpIK" alt="Video Preview" width="40%" />
+
+![image](https://drive.google.com/uc?export=view&id=1c_K3WN0z_bcLEg-SHbf0HO7aSS2kdpIK)
 
 ## ⚙ **Core Features:**
 
