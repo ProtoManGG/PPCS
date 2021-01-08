@@ -1,73 +1,104 @@
-# Post Pandemic Crowd Safety
+# 🦠**PPCS: Post Pandemic Crowd Safety** 💉😷
 
-## Day 0: Created a Flask API Skeletal
-## 🔨 **Languages and Tools:**
+## 🤔❓ **_Impact of COVID-19 In India_** 🙋‍♂️🙋‍♀️
 
-<div float="left">
-<img src="extras\postgresql.png" alt="Postgress" height="40" style="padding:20px;"/>
+The world is going through one of the worst pandemics ever seen. After concurrent lockdowns as the government is easing out, more and more people are heading towards the streets and are on the verge of risking their lives there is a need to alert people about the areas where the crowd is denser and could potentially be risky to travel via, any declared Hotspot zones that the user might be unaware of.
 
-<img src="extras\kafka.png" alt="Kafka" height="40" style="padding:20px;"/>
-<img src="extras\docker.png" alt="Docker" height="40" style="padding:20px;"/>
-<img src="extras\python.jpg" alt="Python" height="40" style="padding:20px;"/>
+Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approximately 2.4 million confirmed cases and 150,000 deaths globally as of April 18. Frontline healthcare workers (HCWs) face a substantially higher risk of infection and death due to excessive COVID-19 exposure
 
-<img src="extras\fastapi.png" alt="fastapi" height="40" style="padding:20px;"/>
-<img src="extras\flutter.png" alt="Flutter" height="40" />
-</div>
+## 🩺👨‍⚕️ _**Our Proposal**_
 
-<br />
-<br />
-## 🏛 **Architecture:**
+- Initially, we are aiming to create an
+  application that crowdsources data and
+  alert people about the areas where the
+  crowd is denser and could potentially be
+  risky to travel via.
 
-<br />
-<br />
+- In future, the system will automatically
+  detect and provide the safest path from
+  source to destination. Hence controlling
+  the spread in a better way and saving
+  more lives as a result.
 
-<img src="extras\architecture.png" alt="Postgress" style="padding:20px;"/>
+- The app presents a minimalistic
+  design pattern that enables
+  everyone to understand and
+  use the application with ease
 
-<br />
-<br />
+## 📺 _**Demo Gif**_
+
+<img src="extras\Demo.gif" alt="Video Preview" width="40%" />
+
 ## ⚙ **Core Features:**
-### Data Collection
+
+### 📮 Data Collection
+
 - Every user that installs the app will provide the geo-location data which will be send to the server to be analyzed
-### Organizing data for efficient processing
+
+### 🗄️ Organizing data for efficient processing
+
 - Entire location data will be stored in the “DATA WAREHOUSE” to make it easier for the efficient retrieval of the data
-### Detecting Crowded Zones
+
+### 🕵️‍♂️ Detecting Crowded Zones
+
 - The organized data is further retrieved and algorithmically analyzed for detecting the hazardous zones
 
-  <br />
-  <br />
-
 ## ✨**Special Features:**
-### Minimal User Interface
+
+### 🌊 Minimal User Interface
+
 - The user should not be bogged with plethora of options but what he wants to see
-### Scalable
+
+### 📏 Scalable
+
 - the back-end server will be extemely scalable to handle humongous amount of users
-### Cross Platform
+
+### ⚔️ Cross Platform
+
 - by using flutter framework we can manage to develop our product on multiple platforms with single code-base
 
+## 📕 **Current Progress:**
 
-<br />
-<br />  
-## ⚙ **Steps to Start Jarvis Server:**
+- [x] Bloc Pattern Used
+- [x] Internet Connection Lost Handled
+- [x] Good Interface Design
+- [x] Internal Errors catched and Handled
+- [x] Minimal Apk Size (7.2 MB)
 
-1.  Create a VM (Ubuntu server 18.04 LTS) (Ports to open: 8000)
-2.  Install Docker : https://docs.docker.com/install/linux/docker-ce/ubuntu/
-3.  Install Docker compose : https://docs.docker.com/compose/install/
+## 🗼 **Architecture:**
 
-4.  Change Directory to dependencies.
-5.  Run all the dependencies (Zookeeper, Kafka, PostgreSQL ) at once with the command : `sudo docker-compose up -d`
-6.  Run command :`pip3 install -r requirements.txt`
-7.  Run restart.py Python file to set-up the dependencies automatically (Only to be done when starting Jarvis for the first time).
-8.  Change Directory to starter
-9. Run Jarvis with the command : `sudo docker-compose up`
+![Data Generation Pipeline](./extras/DGP.png)
+![Data Retrieval Pipeline](./extras/DRP.png)
 
-<br />
-<br />
+## ⚙ **Steps to Start PPCS Server:**
+
+1. Create a VM (Ubuntu server 20.02 LTS) (Ports to open: 8000)
+2. [Install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu)
+3. [Install Docker compose](https://docs.docker.com/compose/install)
+4. Change Directory to dependencies.
+5. Run all the dependencies (Zookeeper, Kafka, PostgreSQL) at once with the command : `sudo docker-compose up -d`
+6. Run command :`pip3 install -r requirements.txt`
+7. Run `restart.py` Python file to set-up the dependencies automatically (Only to be done when starting PPCS for the first time).
+8. Change Directory to starter
+9. Run PPCS with the command : `sudo docker-compose up`
+
+## 🔨 **Languages and Tools:**
+
+<img align="left" alt="Visual Studio Code" width="26px" src="https://cutt.ly/2jkQ1Eh"/>
+<img align="left" alt="Flutter" width="26px" src="https://cutt.ly/yjkQ2mu"/>
+<img align="left" alt="Dart" width="26px" src="https://cutt.ly/xjkQ3Rv"/>
+<img align="left" alt="PostgreSQL" width="26px" src="https://cutt.ly/0jkQNRD"/>
+<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/tjkWqRh"/>
+<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/UjkWiLr"/>
+<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/RjkWsYV"/>
+<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/0jkWkI8"/>
+
+<br>
+<br>
+
 ## 👨‍🏫 **Team Mentor:**
 
 - **Mrs Alankrita Aggarwal**
-
-<br />
-<br />
 
 ## 👥 **Team Members:**
 
@@ -75,22 +106,20 @@
 - 💂‍♂️ **Manan Arora**
 - 👷‍♂️ **Abhay Mendiratta**
 
-<br />
-<br />
+## 🔱 **Apk Link:**
+
+- 🎃 **Check Releases** 👉
+
+## 🔱 **GDrive Link for Resources:**
+
+- 🎇 [**Zipped Source Code, PDFs & Demo Video here**](https://drive.google.com/drive/folders/1qmtGxikv7jGdRZgy9rHEuVkNUxkp_Qc3?usp=sharing)
 
 ## 🧐 **References:**
 
-- Kafka: https://kafka.apache.org/
-- Docker: https://www.docker.com/
-- PostgreSQL: https://www.postgresql.org/
-
-
-
-- Numpy: https://numpy.org/
-
-- FastAPI: https://fastapi.tiangolo.com/
-
-
-
-- Flutter: https://flutter.dev/
-- PsycoPg2: https://pypi.org/project/psycopg2/
+- [Flutter](https://flutter.dev)
+- [Kafka](https://kafka.apache.org)
+- [Docker](https://www.docker.com)
+- [PostgreSQL](https://www.postgresql.org)
+- [Numpy](https://numpy.org)
+- [FastAPI](https://fastapi.tiangolo.com)
+- [PsycoPg2](https://pypi.org/project/psycopg2)
