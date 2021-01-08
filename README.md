@@ -79,12 +79,14 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 1. Create a VM (Ubuntu server 20.02 LTS) (Ports to open: 8000)
 2. [Install Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 3. [Install Docker compose](https://docs.docker.com/compose/install)
-4. Change Directory to dependencies.
-5. Run all the dependencies (Zookeeper, Kafka, PostgreSQL) at once with the command : `sudo docker-compose up -d`
-6. Run command :`pip3 install -r requirements.txt`
-7. Run `restart.py` Python file to set-up the dependencies automatically (Only to be done when starting PPCS for the first time).
-8. Change Directory to starter
-9. Run PPCS with the command : `sudo docker-compose up`
+4. Clone this repository 👆.
+5. Change Directory to dependencies.
+6. Run all the dependencies (Zookeeper, Kafka, PostgreSQL) at once with the command : `sudo docker-compose up -d`
+7. Run command :`pip3 install -r requirements.txt`
+8. Run `restart.py` Python file to set-up the dependencies automatically (Only to be done when starting PPCS for the first time).
+9. Change Directory to starter
+10. Run PPCS with the command : `sudo docker-compose up`
+11. After the server has started use the application on your desired OS.
 
 ---
 
