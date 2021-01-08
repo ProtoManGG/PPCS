@@ -82,19 +82,26 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 8. Change Directory to starter
 9. Run PPCS with the command : `sudo docker-compose up`
 
+---
+
 ## 🔨 **Languages and Tools:**
 
 <img align="left" alt="Visual Studio Code" width="26px" src="https://cutt.ly/2jkQ1Eh"/>
 <img align="left" alt="Flutter" width="26px" src="https://cutt.ly/yjkQ2mu"/>
 <img align="left" alt="Dart" width="26px" src="https://cutt.ly/xjkQ3Rv"/>
-<img align="left" alt="PostgreSQL" width="26px" src="https://cutt.ly/0jkQNRD"/>
-<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/tjkWqRh"/>
-<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/UjkWiLr"/>
-<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/RjkWsYV"/>
-<img align="left" alt="Kafka" width="26px" src="https://cutt.ly/0jkWkI8"/>
+<img align="left" alt="PostgreSQL" width="26px" src="./extras/psql.png"/>
+<img align="left" alt="Kafka" width="26px" src="./extras/kafka.png"/>
+<img align="left" alt="Docker" width="26px" src="./extras/docker.png"/>
+<img align="left" alt="Python" width="26px" src="./extras/py.png"/>
+<img align="left" alt="Fast API" width="26px" src="./extras/fapi.png"/>
+<img align="left" alt="Git" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png" />
+<img align="left" alt="GitHub" width="26px" src="https://raw.githubusercontent.com/github/explore/78df643247d429f6cc873026c0622819ad797942/topics/github/github.png" />
+<img align="left" alt="Terminal" width="26px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/terminal/terminal.png" />
 
-<br>
-<br>
+<br />
+<br />
+
+---
 
 ## 👨‍🏫 **Team Mentor:**
 
