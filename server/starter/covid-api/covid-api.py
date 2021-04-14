@@ -161,7 +161,7 @@ async def get_covid_hotspot(action : Action):
 
 @app.post("/route")
 async def get_covid_hotspot(action : Route):
-    user = jwt.decode(Route.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
+    user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
     cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user['sub']}'")
     user_db = cursor.fetchall()
     if user_db  == []:
@@ -170,8 +170,7 @@ async def get_covid_hotspot(action : Route):
             detail="You are not Authorized",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    update_user(Route.lat_from,Route.longi_from,user['sub'])
-    producer.send("get-hotspot-in",str(str(action.lat)+","+str(action.longi)).encode("utf-8"))
+    update_user(action.lat_from,action.longi_from,user['sub'])
     
     access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
     access_token = create_access_token(
