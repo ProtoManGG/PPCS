@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../providers/api_client.dart';
 
@@ -38,6 +39,18 @@ class Repository {
     return apiClient.getHotSpotZones(
       latitude: latitude,
       longitude: longitude,
+      accessToken: accessToken,
+    );
+  }
+
+  Future getRoutes({
+    @required Marker origin,
+    @required Marker destination,
+    @required String accessToken,
+  }) async {
+    return apiClient.getRoutes(
+      origin: origin,
+      destination: destination,
       accessToken: accessToken,
     );
   }
