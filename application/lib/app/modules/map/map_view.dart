@@ -16,9 +16,7 @@ class MapView extends GetView<MapController> {
   Widget build(BuildContext context) {
     GoogleMapController mapController;
     String _mapStyle;
-    rootBundle.loadString('assets/map_style.txt').then((string) {
-      _mapStyle = string;
-    });
+    rootBundle.loadString('assets/map_style.txt').then((string) => _mapStyle = string);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Hotspots Near You 😷"),
@@ -32,63 +30,59 @@ class MapView extends GetView<MapController> {
               Get.offAllNamed(Routes.LOGIN);
             },
           ),
+          Obx(() {
+            if (controller.origin.value != null && controller.destination.value != null) {
+              return IconButton(
+                icon: const Icon(Icons.navigation_rounded),
+                onPressed: controller.getRoutes,
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          }),
         ],
       ),
       body: SafeArea(
-        // child: Obx(
-        //   () => !controller.isLoaded.value
-        //       ? const Center(child: CircularProgressIndicator())
-        //       : GoogleMap(
-        //           initialCameraPosition: CameraPosition(
-        //             target: LatLng(
-        //               controller.locationData.latitude,
-        //               controller.locationData.longitude,
-        //             ),
-        //             zoom: 17,
-        //           ),
-        //           onMapCreated: (GoogleMapController controller) {
-        //             _controller.complete(controller);
-        //             mapController = controller;
-        //             mapController.setMapStyle(_mapStyle);
-        //           },
-        //           circles: Set<Circle>.of(controller.circleList.values),
-        //           myLocationEnabled: true,
-        //           onLongPress: (argument) {
-        //             controller.isLoaded.value = false;
-        //             controller.getHotspotList();
-        //           },
-        //         ),
-        // ),
-        child: Obx(() {
-          if (controller.currentState.value == AppState.initial) {
-            return Text(controller.data);
-          } else if (controller.currentState.value == AppState.loading) {
-            return const CircularProgressIndicator();
-          } else if (controller.currentState.value == AppState.loaded) {
-            return GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  controller.locationData.latitude,
-                  controller.locationData.longitude,
+        child: Center(
+          child: Obx(() {
+            if (controller.currentState.value == AppState.initial) {
+              return Text(controller.data);
+            } else if (controller.currentState.value == AppState.loading) {
+              return const CircularProgressIndicator();
+            } else if (controller.currentState.value == AppState.loaded) {
+              return GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    controller.locationData.latitude,
+                    controller.locationData.longitude,
+                  ),
+                  zoom: 17,
                 ),
-                zoom: 17,
-              ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                mapController = controller;
-                mapController.setMapStyle(_mapStyle);
-              },
-              circles: Set<Circle>.of(controller.circleList.values),
-              myLocationEnabled: true,
-              // onLongPress: (argument) {
-              //   controller.isLoaded.value = false;
-              //   controller.getHotspotList();
-              // },
-            );
-          } else {
-            return Text(controller.data);
-          }
-        }),
+                onMapCreated: (GoogleMapController controller) {
+                  if (!_controller.isCompleted) _controller.complete(controller);
+                  mapController = controller;
+                  mapController.setMapStyle(_mapStyle);
+                },
+                circles: Set<Circle>.of(controller.circleList.values),
+                myLocationEnabled: true,
+                markers: {
+                  if (controller.origin.value != null) controller.origin.value,
+                  if (controller.destination.value != null) controller.destination.value
+                },
+                onLongPress: controller.addMarker,
+                polylines: controller.polyLines,
+              );
+            } else {
+              return Column(
+                children: [
+                  IconButton(
+                      onPressed: controller.onInit, icon: const Icon(Icons.refresh)),
+                  Text(controller.data),
+                ],
+              );
+            }
+          }),
+        ),
       ),
     );
   }

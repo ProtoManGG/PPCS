@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../services/services.dart';
 import '../models/failure_model.dart';
@@ -10,10 +11,7 @@ class ApiClient {
   Future login({@required String email, @required String password}) async {
     return _postRequestSender(
       path: '/login',
-      data: {
-        "email": email, //! Encrypt
-        "password": password,
-      },
+      data: {"email": email, "password": password},
     );
   }
 
@@ -53,15 +51,29 @@ class ApiClient {
     );
   }
 
+  Future getRoutes({
+    @required Marker origin,
+    @required Marker destination,
+    @required String accessToken,
+  }) async {
+    return _postRequestSender(
+      path: '/route',
+      data: {
+        "lat_from": origin.position.latitude,
+        "longi_from": origin.position.longitude,
+        "lat_to": destination.position.latitude,
+        "longi_to": destination.position.longitude,
+        "access_token": accessToken,
+      },
+    );
+  }
+
   Future _postRequestSender({
     @required String path,
     @required Map<String, dynamic> data,
   }) async {
     try {
-      final Response response = await _api.dio.post(
-        path,
-        data: data,
-      );
+      final Response response = await _api.dio.post(path, data: data);
 
       return response.data;
     } on DioError catch (e) {
