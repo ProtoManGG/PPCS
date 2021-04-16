@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
+import requests
 
 consumer = KafkaConsumer("get-hotspot-out")
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
@@ -34,6 +35,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+KEY = "LLEDFnRN3wCqmrEfLRrqCy1vE4eWwXgk"
+MAX_ROUTES = 10
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -95,6 +98,22 @@ def update_user(lat,longi,email):
     sql_update = f"UPDATE User_Data SET lat = {round(lat,4)},long = {round(longi,4)} WHERE email = '{email}'"
     cursor.execute(sql_update)
     connection.commit()
+
+def get_full_address(lat,longi):
+    reverse_url = f"https://revgeocode.search.hereapi.com/v1/revgeocode?at={lat},{longi}&apikey={KEY}"
+    res = requests.get(reverse_url)
+    return res.json()["items"][0]["address"]["label"]
+
+def clean_routes(shapePoints):
+    route = []
+    i=0
+    while i<=len(shapePoints)-1:
+        temp = []
+        temp.append(shapePoints[i])
+        temp.append(shapePoints[i+1])
+        route.append(list(reversed(temp)))
+        i+=2
+    return route
 
 @app.post('/signup',response_model = Token)
 async def signup_get_token(user:User):
@@ -176,7 +195,17 @@ async def get_covid_hotspot(action : Route):
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
-    return {"path":"ok","access_token":access_token}
+    
+    URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={get_full_address(action.lat_from, action.longi_from)}&to={get_full_address(action.lat_to, action.longi_to)}&maxRoutes={MAX_ROUTES}&timeOverage=1000"
+
+    res = requests.get(URL)
+    data = res.json()
+    try:
+        boundingBox = data["route"]["alternateRoutes"][0]["route"]["boundingBox"]
+        route = clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
+        return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+    except Exception as e:
+        return {"route":"No Routes Found !!","error_message":e}
 
 
 
