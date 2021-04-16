@@ -100,7 +100,7 @@ def update_user(lat,longi,email):
     connection.commit()
 
 def get_full_address(lat,longi):
-    reverse_url = f"https://revgeocode.search.hereapi.com/v1/revgeocode?at={lat},{longi}&apikey={KEY}"
+    reverse_url = f"https://revgeocode.search.hereapi.com/v1/revgeocode?at={lat},{longi}&apikey=lFcSuhNtbp82mvji4vJh01hMloWyZScqhQkaAAgZ6Zs"
     res = requests.get(reverse_url)
     return res.json()["items"][0]["address"]["label"]
 

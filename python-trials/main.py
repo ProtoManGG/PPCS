@@ -10,42 +10,42 @@ def get_full_address(lat,longi):
     res = requests.get(reverse_url)
     return res.json()["items"][0]["address"]["label"]
 
-def clean_routes(shapePoints):
-    route = []
-    i=0
-    while i<=len(shapePoints)-1:
-        temp = []
-        temp.append(shapePoints[i])
-        temp.append(shapePoints[i+1])
-        route.append(list(reversed(temp)))
-        i+=2
-    print(route)
-    return route
+# def clean_routes(shapePoints):
+#     route = []
+#     i=0
+#     while i<=len(shapePoints)-1:
+#         temp = []
+#         temp.append(shapePoints[i])
+#         temp.append(shapePoints[i+1])
+#         route.append(list(reversed(temp)))
+#         i+=2
+#     print(route)
+#     return route
 
-KEY = "LLEDFnRN3wCqmrEfLRrqCy1vE4eWwXgk"
-MAX_ROUTES = 10
+# KEY = "LLEDFnRN3wCqmrEfLRrqCy1vE4eWwXgk"
+# MAX_ROUTES = 10
 
-# https://www.latlong.net/Show-Latitude-Longitude.html
+# # https://www.latlong.net/Show-Latitude-Longitude.html
 
-URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={get_full_address(lat_from, longi_from)}&to={get_full_address(lat_to, longi_to)}&maxRoutes={MAX_ROUTES}&timeOverage=1000"
+# URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={get_full_address(lat_from, longi_from)}&to={get_full_address(lat_to, longi_to)}&maxRoutes={MAX_ROUTES}&timeOverage=1000"
 
-res = requests.get(URL)
-# data = json.load(open("sample.json"))
-data = res.json()
-print(data.keys())
-
-
-print(data["route"].keys())
-
-print(data["route"]["maxRoutes"])
-
-print(len(data["route"]["alternateRoutes"]))
-
-# json.dump(data,open('sonipat.json','w'))
-print(data["route"]["alternateRoutes"][0]["route"]["boundingBox"])
-clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
+# res = requests.get(URL)
+# # data = json.load(open("sample.json"))
+# data = res.json()
+# print(data.keys())
 
 
+# print(data["route"].keys())
+
+# print(data["route"]["maxRoutes"])
+
+# print(len(data["route"]["alternateRoutes"]))
+
+# # json.dump(data,open('sonipat.json','w'))
+# print(data["route"]["alternateRoutes"][0]["route"]["boundingBox"])
+# clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
 
 
+
+print(get_full_address("28.614474265567523","77.07119397819042"))
 
