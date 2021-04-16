@@ -42,17 +42,17 @@ ACCESS_TOKEN_EXPIRE_HOURS = 100
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 class Token(BaseModel):
-    access_token: str
-    token_type: str
+    access_token : str
+    token_type : str
 
 class User(BaseModel):
-    username: str
-    phone_no: int
-    password: str
-    email: Optional[str] = None
-    lat: float
+    username : str
+    phone_no : int
+    password : str
+    email : Optional[str] = None
+    lat : float
     longi : float
-    disabled: Optional[bool] = None
+    disabled : Optional[bool] = None
 
 class Login_user(BaseModel):
     email : str
@@ -61,7 +61,14 @@ class Login_user(BaseModel):
 class Action(BaseModel):
     lat : float
     longi : float
-    access_token: str
+    access_token : str
+
+class Route(BaseModel):
+    lat_from : float
+    longi_from : float
+    lat_to : float
+    longi_to : float
+    access_token : str
 
 def add_user(user_tuple):
     sql = "INSERT INTO User_Data (username,phone_no,password,email,lat,long) VALUES(%s,%s,%s,%s,%s,%s)"
@@ -151,6 +158,28 @@ async def get_covid_hotspot(action : Action):
             data={"sub": user['sub']}, expires_delta=access_token_expires
         )
         return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
+
+@app.post("/route")
+async def get_covid_hotspot(action : Route):
+    user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
+    cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user['sub']}'")
+    user_db = cursor.fetchall()
+    if user_db  == []:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    update_user(action.lat_from,action.longi_from,user['sub'])
     
+    access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+    access_token = create_access_token(
+        data={"sub": user['sub']}, expires_delta=access_token_expires
+    )
+    return {"path":"ok","access_token":access_token}
+
+
+
+
 if __name__ == "__main__":
     uvicorn.run(app,host = '0.0.0.0', port = 8000)
