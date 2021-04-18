@@ -196,7 +196,7 @@ async def get_covid_hotspot(action : Route):
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
     
-    URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={get_full_address(action.lat_from, action.longi_from)}&to={get_full_address(action.lat_to, action.longi_to)}&maxRoutes={MAX_ROUTES}&timeOverage=1000"
+    URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={action.lat_from},{action.longi_from}&to={action.lat_to},{action.longi_to}&maxRoutes={MAX_ROUTES}"
 
     res = requests.get(URL)
     data = res.json()
