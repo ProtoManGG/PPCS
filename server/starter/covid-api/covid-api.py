@@ -178,6 +178,35 @@ async def get_covid_hotspot(action : Action):
         )
         return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
 
+# @app.post("/route")
+# async def get_covid_hotspot(action : Route):
+#     user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
+#     cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user['sub']}'")
+#     user_db = cursor.fetchall()
+#     if user_db  == []:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="You are not Authorized",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     update_user(action.lat_from,action.longi_from,user['sub'])
+    
+#     access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+#     access_token = create_access_token(
+#         data={"sub": user['sub']}, expires_delta=access_token_expires
+#     )
+    
+#     URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={action.lat_from},{action.longi_from}&to={action.lat_to},{action.longi_to}&maxRoutes={MAX_ROUTES}"
+
+#     res = requests.get(URL)
+#     data = res.json()
+#     try:
+#         boundingBox = data["route"]["alternateRoutes"][0]["route"]["boundingBox"]
+#         route = clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
+#         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+#     except Exception as e:
+#         return {"route":"No Routes Found !!","error_message":e}
+
 @app.post("/route")
 async def get_covid_hotspot(action : Route):
     user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
@@ -195,17 +224,23 @@ async def get_covid_hotspot(action : Route):
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
-    
-    URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={action.lat_from},{action.longi_from}&to={action.lat_to},{action.longi_to}&maxRoutes={MAX_ROUTES}"
+    headers = {
+    'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+    }
+    KEY_ORS="5b3ce3597851110001cf62489c708b292d2e4547a7742c6cd864245e"
+    call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={action.longi_to},{action.lat_to}', headers=headers)
 
-    res = requests.get(URL)
-    data = res.json()
+    
+    res=call.json()
     try:
-        boundingBox = data["route"]["alternateRoutes"][0]["route"]["boundingBox"]
-        route = clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
+        bbox=res["features"][0]["bbox"]  
+        boundingBox={"lr":{"lng":bbox[0],"lat":bbox[1]},"ul":{"lng":bbox[2],"lat":bbox[3]}}  
+        route=res["features"][0]["geometry"]["coordinates"]
         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
     except Exception as e:
         return {"route":"No Routes Found !!","error_message":e}
+    
+
 
 
 
