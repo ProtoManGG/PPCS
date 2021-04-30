@@ -85,16 +85,18 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
               ),
-              Obx(() {
-                if (controller.currentState.value == AppState.loading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (controller.currentState.value == AppState.loaded) {
-                  Future.delayed(Duration.zero, () => Get.offAllNamed(Routes.MAP));
+              controller.obx(
+                (state) {
+                  Future.delayed(
+                    Duration.zero,
+                    () => Get.offAllNamed(Routes.MAP),
+                  );
                   return const SizedBox.shrink();
-                } else {
-                  return Text(controller.data);
-                }
-              }),
+                },
+                onLoading: const Center(child: CircularProgressIndicator()),
+                onError: (error) => Text(error),
+                onEmpty: const Text('Press the button 👇'),
+              ),
               Button(
                 isTextOnly: false,
                 text: 'Log In',

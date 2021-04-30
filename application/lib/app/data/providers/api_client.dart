@@ -56,16 +56,39 @@ class ApiClient {
     @required Marker destination,
     @required String accessToken,
   }) async {
-    return _postRequestSender(
-      path: '/route',
-      data: {
-        "lat_from": origin.position.latitude,
-        "longi_from": origin.position.longitude,
-        "lat_to": destination.position.latitude,
-        "longi_to": destination.position.longitude,
-        "access_token": accessToken,
-      },
-    );
+    try {
+      final Response response = await Dio().post(
+        'https://e82b783c8887.ngrok.io/route',
+        data: {
+          "lat_from": origin.position.latitude,
+          "longi_from": origin.position.longitude,
+          "lat_to": destination.position.latitude,
+          "longi_to": destination.position.longitude,
+          "access_token": accessToken,
+        },
+      );
+
+      return response.data;
+    } on DioError catch (e) {
+      if (e.response != null) {
+        throw Failure(
+          statusCode: e.response.statusCode,
+          message: e.response.statusMessage,
+        );
+      } else {
+        throw Failure(message: e.message);
+      }
+    }
+    // return _postRequestSender(
+    //   path: '/route',
+    //   data: {
+    //     "lat_from": origin.position.latitude,
+    //     "longi_from": origin.position.longitude,
+    //     "lat_to": destination.position.latitude,
+    //     "longi_to": destination.position.longitude,
+    //     "access_token": accessToken,
+    //   },
+    // );
   }
 
   Future _postRequestSender({

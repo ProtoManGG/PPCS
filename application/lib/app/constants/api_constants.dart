@@ -1,2 +1,3 @@
 // const String baseUrl = "http://192.168.0.108:8000";
-const String baseUrl = "http://3991bb70ae6d.ngrok.io";
+const String baseUrl = "https://975b1eb73370.ngrok.io";
+const kGoogleApiKey = "AIzaSyC65uWOQsZSDpSfeDyKLIYWorwADgRu5RU";

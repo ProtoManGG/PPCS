@@ -9,8 +9,8 @@ class ApiService extends GetxService {
   final dio = Dio(
     BaseOptions(
       baseUrl: baseUrl,
-      connectTimeout: 5000,
-      receiveTimeout: 3000,
+      connectTimeout: 10000,
+      receiveTimeout: 10000,
     ),
   );
 }

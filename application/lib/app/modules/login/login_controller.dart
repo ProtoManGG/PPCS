@@ -6,23 +6,24 @@ import '../../data/models/failure_model.dart';
 import '../../data/repository/repository.dart';
 import '../../services/services.dart';
 
-class LoginController extends GetxController {
+class LoginController extends GetxController with StateMixin {
   final Repository repository;
-  LoginController({@required this.repository});
+  LoginController({@required this.repository}) {
+    change("Initial", status: RxStatus.empty());
+  }
 
-  final currentState = AppState.initial.obs;
-  String data = 'Press the button 👇';
-
-  Future<void> login({@required String email, @required String password}) async {
+  Future<void> login({
+    @required String email,
+    @required String password,
+  }) async {
     try {
-      currentState.value = AppState.loading;
+      change('Loading', status: RxStatus.loading());
       final _storage = StorageService().instance;
       final body = await repository.login(email: email, password: password);
       _storage.box.write(storageKey, body["access_token"]);
-      currentState.value = AppState.loaded;
+      change('Success', status: RxStatus.success());
     } on Failure catch (f) {
-      data = f.toString();
-      currentState.value = AppState.failure;
+      change('Failure', status: RxStatus.error(f.toString()));
     }
   }
 }
