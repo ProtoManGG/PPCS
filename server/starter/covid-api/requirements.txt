@@ -9,3 +9,4 @@ scipy==1.5.2
 sklearn==0.0
 uvicorn==0.12.1
 kafka-python==2.0.1
+requests

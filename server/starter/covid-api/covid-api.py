@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 from kafka import KafkaProducer
 from kafka import KafkaConsumer
+import requests
 
 consumer = KafkaConsumer("get-hotspot-out")
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
@@ -34,6 +35,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+KEY = "LLEDFnRN3wCqmrEfLRrqCy1vE4eWwXgk"
+MAX_ROUTES = 10
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -95,6 +98,22 @@ def update_user(lat,longi,email):
     sql_update = f"UPDATE User_Data SET lat = {round(lat,4)},long = {round(longi,4)} WHERE email = '{email}'"
     cursor.execute(sql_update)
     connection.commit()
+
+def get_full_address(lat,longi):
+    reverse_url = f"https://revgeocode.search.hereapi.com/v1/revgeocode?at={lat},{longi}&apikey=lFcSuhNtbp82mvji4vJh01hMloWyZScqhQkaAAgZ6Zs"
+    res = requests.get(reverse_url)
+    return res.json()["items"][0]["address"]["label"]
+
+def clean_routes(shapePoints):
+    route = []
+    i=0
+    while i<=len(shapePoints)-1:
+        temp = []
+        temp.append(shapePoints[i])
+        temp.append(shapePoints[i+1])
+        route.append(list(reversed(temp)))
+        i+=2
+    return route
 
 @app.post('/signup',response_model = Token)
 async def signup_get_token(user:User):
@@ -159,6 +178,35 @@ async def get_covid_hotspot(action : Action):
         )
         return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
 
+# @app.post("/route")
+# async def get_covid_hotspot(action : Route):
+#     user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
+#     cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user['sub']}'")
+#     user_db = cursor.fetchall()
+#     if user_db  == []:
+#         raise HTTPException(
+#             status_code=status.HTTP_401_UNAUTHORIZED,
+#             detail="You are not Authorized",
+#             headers={"WWW-Authenticate": "Bearer"},
+#         )
+#     update_user(action.lat_from,action.longi_from,user['sub'])
+    
+#     access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+#     access_token = create_access_token(
+#         data={"sub": user['sub']}, expires_delta=access_token_expires
+#     )
+    
+#     URL = f"http://www.mapquestapi.com/directions/v2/alternateroutes?key={KEY}&from={action.lat_from},{action.longi_from}&to={action.lat_to},{action.longi_to}&maxRoutes={MAX_ROUTES}"
+
+#     res = requests.get(URL)
+#     data = res.json()
+#     try:
+#         boundingBox = data["route"]["alternateRoutes"][0]["route"]["boundingBox"]
+#         route = clean_routes(data["route"]["alternateRoutes"][0]["route"]["shape"]["shapePoints"])
+#         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+#     except Exception as e:
+#         return {"route":"No Routes Found !!","error_message":e}
+
 @app.post("/route")
 async def get_covid_hotspot(action : Route):
     user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
@@ -176,7 +224,23 @@ async def get_covid_hotspot(action : Route):
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
-    return {"path":"ok","access_token":access_token}
+    headers = {
+    'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+    }
+    KEY_ORS="5b3ce3597851110001cf62489c708b292d2e4547a7742c6cd864245e"
+    call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={action.longi_to},{action.lat_to}', headers=headers)
+
+    
+    res=call.json()
+    try:
+        bbox=res["features"][0]["bbox"]  
+        boundingBox={"lr":{"lng":bbox[0],"lat":bbox[1]},"ul":{"lng":bbox[2],"lat":bbox[3]}}  
+        route=res["features"][0]["geometry"]["coordinates"]
+        return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+    except Exception as e:
+        return {"route":"No Routes Found !!","error_message":e}
+    
+
 
 
 
