@@ -219,7 +219,7 @@ async def get_covid_hotspot(action : Route):
             headers={"WWW-Authenticate": "Bearer"},
         )
     update_user(action.lat_from,action.longi_from,user['sub'])
-    
+
     access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
     access_token = create_access_token(
         data={"sub": user['sub']}, expires_delta=access_token_expires
@@ -230,7 +230,7 @@ async def get_covid_hotspot(action : Route):
     KEY_ORS="5b3ce3597851110001cf62489c708b292d2e4547a7742c6cd864245e"
     call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={action.longi_to},{action.lat_to}', headers=headers)
 
-    
+
     res=call.json()
     try:
         bbox=res["features"][0]["bbox"]  
