@@ -9,23 +9,23 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  cupertino_icons: ^1.0.0
-  dio: ^3.0.10
   flutter:
     sdk: flutter
-  flutter_svg:
+  avatar_glow: ^1.2.0
+  cupertino_icons: ^1.0.0
+  dio: ^3.0.10
+  flutter_svg: null
   get: ^3.24.0
   get_storage: ^1.4.0
   google_maps_flutter: ^1.0.6
   google_maps_flutter_web: ^0.1.0+8
-  # search_map_place: ^0.3.0
   location: ^3.2.1
   speech_to_text: ^3.2.0
 
 dev_dependencies:
-  flutter_launcher_icons:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: null
   lint: ^1.3.0
 
 flutter:
