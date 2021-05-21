@@ -2,7 +2,8 @@
 2 Prepare Presentation(journey of app) and Review github page 20 may
 3 Prepare Video 21 may
 4 Upload Research paper update alankrita mam 22 may
-
+5 add testing
+add testing screenshots
 
 project paper 25
 research paper 25 if not publish 0
@@ -20,3 +21,35 @@ Research paper submission sites
 1 https://www.ijraset.com/
 
 Your Paper ID is : IJRASET34385
+
+add figures in table of figures
+ 7.1 Data Generation Pipeline
+7.2 Data Retrieval Pipeline
+7.3 Crowd Sourcing using k nearest neighbours
+
+add route screenshots
+Remove 1 from there and add it to testing also add 2 SS to testing from these
+Change table with page number
+
+
+Dear Students
+
+Please find below the Google Link for Final Year Project submissions of 8th semester.
+
+https://forms.gle/xj1RNuNtWdkLMrUT9
+
+Last date of submission is 31st May 2021, Team leaders have to submit the project related documents through google form.
+
+Only teams submitting all details successfully through google form will be allowed to give the final presentations.
+
+Project Video of 7th sem and 8th sem will be checked to verify the progress made in 8th semester.
+
+Marks Distribution
+
+Project Report - 25 marks
+Project code - 25 marks
+Project video with updated functionalities - 25 marks
+Published research/review paper - 25 marks
+----------------------------------------------------------------------
+Total -                                   100 marks
+---------------------------------------------------------------------
