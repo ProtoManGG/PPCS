@@ -189,6 +189,16 @@ class RegisterView extends GetView<RegisterController> {
                     } else {}
                   },
                 ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: "Ngrok ID"),
+                  validator: (value) {
+                    if (value.isBlank) {
+                      return 'Please enter a ngrok id';
+                    }
+                    baseUrl = "https://$value.ngrok.io";
+                    return null;
+                  },
+                )
               ],
             ),
           ),

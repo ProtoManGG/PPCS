@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
+import '../../constants/api_constants.dart';
+import '../../constants/constants.dart';
 import '../../services/services.dart';
 import '../models/failure_model.dart';
 
@@ -68,12 +71,32 @@ class ApiClient {
     );
   }
 
+  Future searchRoute({
+    @required String route,
+    @required LocationData origin,
+    @required String accessToken,
+  }) {
+    return _postRequestSender(
+      path: '/searchroute',
+      data: {
+        "lat_from": origin.latitude,
+        "longi_from": origin.longitude,
+        "address": route,
+        "access_token": accessToken,
+      },
+    );
+  }
+
   Future _postRequestSender({
     @required String path,
     @required Map<String, dynamic> data,
   }) async {
     try {
-      final Response response = await _api.dio.post(path, data: data);
+      final _storage = StorageService().instance;
+
+      final _baseUrl = baseUrl ?? _storage.box.hasData(ngrokKey);
+      final Response response =
+          await _api.dio.post("$_baseUrl$path", data: data);
 
       return response.data;
     } on DioError catch (e) {

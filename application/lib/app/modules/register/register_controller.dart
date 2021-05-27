@@ -24,6 +24,7 @@ class RegisterController extends GetxController {
     try {
       currentState.value = AppState.loading;
       final _storage = StorageService().instance;
+      _storage.box.write(ngrokKey, baseUrl);
       final body = await authRepository.signUp(
         username: username,
         phonenum: phonenum,

@@ -2,16 +2,26 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:getx_ecosystem_trial/app/modules/map/stt_controller.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../constants/storage_constants.dart';
+import '../../data/providers/api_client.dart';
+import '../../data/repository/repository.dart';
 import '../../routes/app_pages.dart';
+import '../../services/storage_service.dart';
 import 'map_controller.dart';
+import 'stt_controller.dart';
 
 class MapView extends GetView<MapController> {
   @override
   Widget build(BuildContext context) {
-    final _sttController = Get.put(SttController());
+    final _sttController = Get.put(
+      SttController(
+        Repository(
+          apiClient: ApiClient(),
+        ),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text("Hotspots Near You 😷"),
@@ -111,7 +121,14 @@ class MapView extends GetView<MapController> {
           endRadius: 90.0,
           child: FloatingActionButton(
             backgroundColor: Colors.white,
-            onPressed: () => _sttController.listen(),
+            onPressed: () async {
+              final _storage = StorageService().instance;
+
+              return _sttController.listen(
+                accessToken: await _storage.box.read(storageKey),
+                origin: controller.locationData,
+              );
+            },
             child: Icon(
               _sttController.isListening.value ? Icons.mic : Icons.mic_none,
             ),

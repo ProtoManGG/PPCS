@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import '../providers/api_client.dart';
 
@@ -51,6 +52,18 @@ class Repository {
     return apiClient.getRoutes(
       origin: origin,
       destination: destination,
+      accessToken: accessToken,
+    );
+  }
+
+  Future searchRoute({
+    @required String route,
+    @required LocationData origin,
+    @required String accessToken,
+  }) {
+    return apiClient.searchRoute(
+      route: route,
+      origin: origin,
       accessToken: accessToken,
     );
   }
