@@ -64,7 +64,7 @@ class MapController extends GetxController with StateMixin {
         change("Failure", status: RxStatus.error(f.toString()));
       }
 
-      for (final CoronaHotspot element in hotspotList.coronaHotspot) {
+      for (final CoronaHotspot element in hotspotList?.coronaHotspot ?? []) {
         final circleId =
             CircleId(hotspotList.coronaHotspot.indexOf(element).toString());
         circleList[circleId] = Circle(
@@ -102,7 +102,7 @@ class MapController extends GetxController with StateMixin {
         );
       }
 
-      for (final CrowdHotspot element in hotspotList.crowdHotspot) {
+      for (final CrowdHotspot element in hotspotList?.crowdHotspot ?? []) {
         final circleId =
             CircleId(hotspotList.crowdHotspot.indexOf(element).toString());
         circleList[circleId] = Circle(

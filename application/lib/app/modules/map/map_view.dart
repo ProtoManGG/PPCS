@@ -22,6 +22,7 @@ class MapView extends GetView<MapController> {
         ),
       ),
     );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Hotspots Near You 😷"),
