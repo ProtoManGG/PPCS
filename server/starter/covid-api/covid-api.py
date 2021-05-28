@@ -82,8 +82,11 @@ class Searchroute(BaseModel):
 
 def getCoords(address,KEY):
     req = requests.get(f"https://api.openrouteservice.org/geocode/search?api_key={KEY}&text={address}")
-    RES = req.json()["features"][0]["geometry"]["coordinates"]
-    return RES[0],RES[1]
+    try:
+        RES = req.json()["features"][0]["geometry"]["coordinates"]
+        return True,RES[0],RES[1]
+    except:
+        return False,0,0
 
 
 def add_user(user_tuple):
@@ -275,22 +278,25 @@ async def get_covid_hotspot(action : Searchroute):
         data={"sub": user['sub']}, expires_delta=access_token_expires
     )
     KEY_ORS="5b3ce3597851110001cf62489c708b292d2e4547a7742c6cd864245e"
-    longi_to,lat_to = getCoords(action.address,KEY_ORS)
-    headers = {
-    'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
-    }
-    
-    call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={longi_to},{lat_to}', headers=headers)
+    check,longi_to,lat_to = getCoords(action.address,KEY_ORS)
+    if check:
+        headers = {
+        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+        }
+        
+        call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={longi_to},{lat_to}', headers=headers)
 
 
-    res=call.json()
-    try:
-        bbox=res["features"][0]["bbox"]  
-        boundingBox={"lr":{"lng":bbox[0],"lat":bbox[1]},"ul":{"lng":bbox[2],"lat":bbox[3]}}  
-        route=res["features"][0]["geometry"]["coordinates"]
-        return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
-    except Exception as e:
-        return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
+        res=call.json()
+        try:
+            bbox=res["features"][0]["bbox"]  
+            boundingBox={"lr":{"lng":bbox[0],"lat":bbox[1]},"ul":{"lng":bbox[2],"lat":bbox[3]}}  
+            route=res["features"][0]["geometry"]["coordinates"]
+            return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+        except Exception as e:
+            return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
+    else:
+        return {"route":"No Routes Found !!","access_token":access_token}
     
 
 
