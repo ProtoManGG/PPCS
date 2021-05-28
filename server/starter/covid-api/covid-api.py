@@ -251,7 +251,7 @@ async def get_covid_hotspot(action : Route):
         route=res["features"][0]["geometry"]["coordinates"]
         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
     except Exception as e:
-        return {"route":"No Routes Found !!","error_message":e}
+        return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
     
 
 
@@ -290,7 +290,7 @@ async def get_covid_hotspot(action : Searchroute):
         route=res["features"][0]["geometry"]["coordinates"]
         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
     except Exception as e:
-        return {"route":"No Routes Found !!","error_message":e}
+        return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
     
 
 
