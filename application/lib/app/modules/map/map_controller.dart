@@ -62,7 +62,7 @@ class MapController extends GetxController with StateMixin {
       final body = await repository.getHotSpotZones(
         latitude: locationData!.latitude!,
         longitude: locationData!.longitude!,
-        accessToken:_storage.box.read<String>(storageKey)!,
+        accessToken: _storage.box.read<String>(storageKey)!,
       );
       hotspotModel = HotspotModel.fromJson(body as Map<String, dynamic>);
       if (hotspotModel == null) {
@@ -73,54 +73,61 @@ class MapController extends GetxController with StateMixin {
       change("Failure", status: RxStatus.error(f.toString()));
     }
 
-    for (final CoronaHotspotModel element in hotspotModel?.coronaHotspot ?? []) {
-      final circleId =
-          CircleId(hotspotModel!.coronaHotspot.indexOf(element).toString());
-      circleList[circleId] = Circle(
-        circleId: circleId,
-        center: LatLng(element.lat, element.long),
-        radius: element.active / 5,
-        fillColor: Colors.redAccent.withOpacity(element.death / 100),
-        strokeColor: Colors.redAccent.withOpacity(0.2),
-        // strokeWidth: 20,
-        consumeTapEvents: true,
-        onTap: () async {
-          Get.defaultDialog(
-            title: '${element.lat},${element.long}',
-            content: Column(
-              children: [
-                InfoDialog(
-                  title: "Active",
-                  imagePath: "031-medical-mask.svg",
-                  hotspotInfo: element.active,
-                ),
-                InfoDialog(
-                  title: "Dead",
-                  imagePath: "025-No.svg",
-                  hotspotInfo: element.death,
-                ),
-                InfoDialog(
-                  title: "Recovered",
-                  imagePath: "044-immunity.svg",
-                  hotspotInfo: element.recovered,
-                ),
-              ],
-            ),
-          );
-        },
-      );
+    if (hotspotModel!.coronaHotspot.isNotEmpty) {
+      for (final CoronaHotspotModel element in hotspotModel!.coronaHotspot) {
+        final circleId =
+            CircleId(hotspotModel!.coronaHotspot.indexOf(element).toString());
+
+        circleList[circleId] = Circle(
+          circleId: circleId,
+          center: LatLng(element.lat, element.long),
+          radius: element.active / 5,
+          fillColor: Colors.redAccent.withOpacity(element.death / 100),
+          strokeColor: Colors.redAccent.withOpacity(0.2),
+          // strokeWidth: 20,
+          consumeTapEvents: true,
+          onTap: () async {
+            Get.defaultDialog(
+              title: '${element.lat},${element.long}',
+              content: Column(
+                children: [
+                  InfoDialog(
+                    title: "Active",
+                    imagePath: "031-medical-mask.svg",
+                    hotspotInfo: element.active,
+                  ),
+                  InfoDialog(
+                    title: "Dead",
+                    imagePath: "025-No.svg",
+                    hotspotInfo: element.death,
+                  ),
+                  InfoDialog(
+                    title: "Recovered",
+                    imagePath: "044-immunity.svg",
+                    hotspotInfo: element.recovered,
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }
     }
 
-    for (final CrowdHotspotModel element in hotspotModel?.crowdHotspot ?? []) {
-      final circleId =
-          CircleId(hotspotModel!.crowdHotspot.indexOf(element).toString());
-      circleList[circleId] = Circle(
-        circleId: circleId,
-        center: LatLng(element.lat, element.long),
-        radius: 40,
-        fillColor: Colors.black.withOpacity(0.5),
-        strokeColor: Colors.black45.withOpacity(0.2),
-      );
+    if (hotspotModel!.crowdHotspot.isNotEmpty) {
+      for (final CrowdHotspotModel element
+          in hotspotModel?.crowdHotspot ?? []) {
+        final circleId =
+            CircleId(hotspotModel!.crowdHotspot.indexOf(element).toString());
+
+        circleList[circleId] = Circle(
+          circleId: circleId,
+          center: LatLng(element.lat, element.long),
+          radius: 40,
+          fillColor: Colors.black.withOpacity(0.5),
+          strokeColor: Colors.black45.withOpacity(0.2),
+        );
+      }
     }
     change("Success", status: RxStatus.success());
   }
@@ -158,7 +165,7 @@ class MapController extends GetxController with StateMixin {
       final _storage = StorageService().instance;
       if (origin == null ||
           destination == null ||
-           _storage.box.read<String>(storageKey) == null) {
+          _storage.box.read<String>(storageKey) == null) {
         throw Failure("Location data is not provided");
       }
       final body = await repository.getRoutes(
