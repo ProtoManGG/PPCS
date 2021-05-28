@@ -42,10 +42,14 @@ class SttController extends GetxController with StateMixin {
     required String accessToken,
   }) async {
     if (!isListening.value) {
+      bool _isCalledOnce = false;
+      isListening.value = true;
       final bool available = await speechToText?.initialize(
+            finalTimeout: const Duration(seconds: 1),
             onStatus: (status) async {
               debugPrint(status);
-              if (status == 'notListening') {
+              if (status == 'notListening' && _isCalledOnce != true) {
+                _isCalledOnce = true;
                 isListening.value = false;
                 debugPrint(speechText.value);
                 await searchRoute(
@@ -53,6 +57,7 @@ class SttController extends GetxController with StateMixin {
                   origin: origin,
                   accessToken: accessToken,
                 );
+                speechText.value = "";
                 speechToText?.stop();
               }
             },
@@ -72,13 +77,17 @@ class SttController extends GetxController with StateMixin {
       } else {
         isListening.value = false;
         speechToText?.stop();
-        debugPrint(speechText.value);
-        speechText.value = "";
       }
     } else {
       speechToText?.cancel();
-      debugPrint(speechText.value);
       isListening.value = false;
+      // debugPrint(speechText.value);
+      // speechText.value = "";
+      // await searchRoute(
+      //   route: speechText.value,
+      //   origin: origin,
+      //   accessToken: accessToken,
+      // );
     }
   }
 
