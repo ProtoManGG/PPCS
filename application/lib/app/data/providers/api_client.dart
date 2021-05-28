@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
-import 'package:getx_ecosystem_trial/app/constants/storage_constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -94,10 +93,8 @@ class ApiClient {
     required Map<String, dynamic> data,
   }) async {
     try {
-      final _storage = StorageService().instance;
-      final _baseUrl = baseUrl ?? _storage.box.read<String>(ngrokKey);
       final Response response = await _api.dio.post(
-        "$_baseUrl$path",
+        "$baseUrl$path",
         data: data,
       );
       return response.data;

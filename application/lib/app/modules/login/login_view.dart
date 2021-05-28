@@ -123,29 +123,6 @@ class LoginView extends GetView<LoginController> {
                     icon: Icons.vpn_key,
                     onPressed: () => Get.toNamed(Routes.REGISTER),
                   ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please enter a ngrok id';
-                      }
-                      baseUrl = "https://$value.ngrok.io";
-                      return null;
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    keyboardType: TextInputType.emailAddress,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20),
-                    decoration: style.kInputDecoration.copyWith(
-                      hintText: '**/*/***/*',
-                      labelText: 'Ngrok ID',
-                      suffixIcon: IconButton(
-                        icon: _showPassword.value
-                            ? const Icon(Icons.visibility)
-                            : const Icon(Icons.visibility_off),
-                        onPressed: () => _showPassword.toggle(),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
