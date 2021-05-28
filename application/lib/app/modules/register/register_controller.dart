@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constants.dart';
@@ -8,18 +7,18 @@ import '../../services/services.dart';
 
 class RegisterController extends GetxController {
   Repository authRepository;
-  RegisterController({@required this.authRepository});
+  RegisterController({required this.authRepository});
 
   final currentState = AppState.initial.obs;
   String data = 'Press the button 👇';
 
   Future<void> signUp({
-    @required String email,
-    @required String password,
-    @required int phonenum,
-    @required String username,
-    @required double latitude,
-    @required double longitude,
+    required String email,
+    required String password,
+    required int phonenum,
+    required String username,
+    required double latitude,
+    required double longitude,
   }) async {
     try {
       currentState.value = AppState.loading;

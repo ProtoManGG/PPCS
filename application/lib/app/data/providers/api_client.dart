@@ -1,17 +1,19 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:getx_ecosystem_trial/app/constants/api_constants.dart';
+import 'package:getx_ecosystem_trial/app/constants/storage_constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-import '../../constants/api_constants.dart';
-import '../../constants/constants.dart';
 import '../../services/services.dart';
 import '../models/failure_model.dart';
 
 class ApiClient {
   final _api = ApiService().instance;
 
-  Future login({@required String email, @required String password}) async {
+  Future login({
+    required String email,
+    required String password,
+  }) async {
     return _postRequestSender(
       path: '/login',
       data: {"email": email, "password": password},
@@ -19,12 +21,12 @@ class ApiClient {
   }
 
   Future signUp({
-    @required String username,
-    @required String email,
-    @required String password,
-    @required double latitude,
-    @required double longitude,
-    @required int phonenum,
+    required String username,
+    required String email,
+    required String password,
+    required double latitude,
+    required double longitude,
+    required int phonenum,
   }) async {
     return _postRequestSender(
       path: '/signup',
@@ -40,9 +42,9 @@ class ApiClient {
   }
 
   Future getHotSpotZones({
-    @required double latitude,
-    @required double longitude,
-    @required String accessToken,
+    required double latitude,
+    required double longitude,
+    required String accessToken,
   }) async {
     return _postRequestSender(
       path: '/covid',
@@ -55,9 +57,9 @@ class ApiClient {
   }
 
   Future getRoutes({
-    @required Marker origin,
-    @required Marker destination,
-    @required String accessToken,
+    required Marker origin,
+    required Marker destination,
+    required String accessToken,
   }) async {
     return _postRequestSender(
       path: '/route',
@@ -72,9 +74,9 @@ class ApiClient {
   }
 
   Future searchRoute({
-    @required String route,
-    @required LocationData origin,
-    @required String accessToken,
+    required String route,
+    required LocationData origin,
+    required String accessToken,
   }) {
     return _postRequestSender(
       path: '/searchroute',
@@ -88,26 +90,22 @@ class ApiClient {
   }
 
   Future _postRequestSender({
-    @required String path,
-    @required Map<String, dynamic> data,
+    required String path,
+    required Map<String, dynamic> data,
   }) async {
     try {
       final _storage = StorageService().instance;
-
-      final _baseUrl = baseUrl ?? _storage.box.hasData(ngrokKey);
-      final Response response =
-          await _api.dio.post("$_baseUrl$path", data: data);
-
+      final _baseUrl = baseUrl ?? _storage.box.read<String>(ngrokKey);
+      final Response response = await _api.dio.post(
+        "$_baseUrl$path",
+        data: data,
+      );
       return response.data;
     } on DioError catch (e) {
-      if (e.response != null) {
-        throw Failure(
-          statusCode: e.response.statusCode,
-          message: e.response.statusMessage,
-        );
-      } else {
-        throw Failure(message: e.message);
-      }
+      throw Failure(
+        e.response?.statusMessage ?? e.message,
+        statusCode: e.response?.statusCode,
+      );
     }
   }
 }

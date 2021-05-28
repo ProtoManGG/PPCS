@@ -3,14 +3,11 @@ class Failure {
   // throw Failure('No Internet connection 😑');
   // throw Failure("Couldn't find the post 😱");
   // throw Failure("Bad response format 👎");
-  final int statusCode;
+  final int? statusCode;
   final String message;
 
-  Failure({
-    this.statusCode,
-    this.message,
-  });
+  Failure(this.message, {this.statusCode});
 
   @override
-  String toString() => "😐 ${statusCode ?? ""}: $message";
+  String toString() => "😐 $statusCode : $message";
 }

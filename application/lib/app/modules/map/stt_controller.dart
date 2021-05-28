@@ -14,6 +14,8 @@ import '../../data/repository/repository.dart';
 import 'map_controller.dart';
 
 class SttController extends GetxController with StateMixin {
+  SttController(this.repository);
+
   final _mapController = Get.put(
     MapController(
       repository: Repository(
@@ -21,14 +23,13 @@ class SttController extends GetxController with StateMixin {
       ),
     ),
   );
+
   final Repository repository;
 
   final isListening = false.obs;
   final speechText = 'Press the mic button and start speaking'.obs;
 
-  SpeechToText speechToText;
-
-  SttController(this.repository);
+  SpeechToText? speechToText;
 
   @override
   void onInit() {
@@ -37,44 +38,45 @@ class SttController extends GetxController with StateMixin {
   }
 
   Future<void> listen({
-    @required LocationData origin,
-    @required String accessToken,
+    required LocationData origin,
+    required String accessToken,
   }) async {
     if (!isListening.value) {
-      final bool available = await speechToText.initialize(
-        onStatus: (status) async {
-          debugPrint(status);
-          if (status == 'notListening') {
-            isListening.value = false;
-            debugPrint(speechText.value);
-            await searchRoute(
-              route: speechText.value,
-              origin: origin,
-              accessToken: accessToken,
-            );
-            speechToText.stop();
-          }
-        },
-        onError: (errorNotification) {
-          debugPrint("error $errorNotification");
-          isListening.value = false;
-          speechToText.stop();
-          speechText.value = "";
-        },
-      );
+      final bool available = await speechToText?.initialize(
+            onStatus: (status) async {
+              debugPrint(status);
+              if (status == 'notListening') {
+                isListening.value = false;
+                debugPrint(speechText.value);
+                await searchRoute(
+                  route: speechText.value,
+                  origin: origin,
+                  accessToken: accessToken,
+                );
+                speechToText?.stop();
+              }
+            },
+            onError: (errorNotification) {
+              debugPrint("error $errorNotification");
+              isListening.value = false;
+              speechToText?.stop();
+              speechText.value = "";
+            },
+          ) ??
+          false;
       if (available) {
         isListening.value = true;
-        speechToText.listen(
+        speechToText?.listen(
           onResult: (result) => speechText.value = result.recognizedWords,
         );
       } else {
         isListening.value = false;
-        speechToText.stop();
+        speechToText?.stop();
         debugPrint(speechText.value);
         speechText.value = "";
       }
     } else {
-      speechToText.cancel();
+      speechToText?.cancel();
       debugPrint(speechText.value);
       isListening.value = false;
     }
@@ -82,13 +84,13 @@ class SttController extends GetxController with StateMixin {
 
   @override
   void onClose() {
-    speechToText.cancel();
+    speechToText?.cancel();
   }
 
   Future<void> searchRoute({
-    @required String route,
-    @required LocationData origin,
-    @required String accessToken,
+    required String route,
+    required LocationData origin,
+    required String accessToken,
   }) async {
     change("Loading", status: RxStatus.loading());
 
@@ -112,14 +114,14 @@ class SttController extends GetxController with StateMixin {
         }
 
         _mapController.polyLines.add(Polyline(
-          polylineId: PolylineId("polyline"),
+          polylineId: const PolylineId("polyline"),
           points: _mapController.polyPoints,
         ));
 
         // final Completer<GoogleMapController> _controller = Completer();
         // if (!_controller.isCompleted) _controller.complete(gcontroller);
         // mapController = await _controller.future;
-        _mapController.mapController.animateCamera(
+        _mapController.mapController?.animateCamera(
           CameraUpdate.newLatLngBounds(
             LatLngBounds(
               southwest: LatLng(

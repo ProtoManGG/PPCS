@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:location/location.dart';
+import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/style_constants.dart';
@@ -13,11 +13,13 @@ class RegisterView extends GetView<RegisterController> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    String _email;
-    String _password;
-    String _fullName;
-    String _phoneNum;
+    String? _email;
+    String? _password;
+    String? _fullName;
+    String? _phoneNum;
+
     final RxBool _showPassword = false.obs;
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -48,12 +50,15 @@ class RegisterView extends GetView<RegisterController> {
                           textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           validator: (value) {
-                            if (!GetUtils.isAlphabetOnly(value) ||
+                            if (value == null) {
+                              return 'Please enter a Name';
+                            } else if (!GetUtils.isAlphabetOnly(value) ||
                                 value.length > 20) {
                               return 'Not a valid First Name';
+                            } else {
+                              _fullName = value;
+                              return null;
                             }
-                            _fullName = value;
-                            return null;
                           },
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.text,
@@ -70,12 +75,15 @@ class RegisterView extends GetView<RegisterController> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             validator: (value) {
-                              if (!GetUtils.isAlphabetOnly(value) ||
+                              if (value == null) {
+                                return 'Please enter a Last Name';
+                              } else if (!GetUtils.isAlphabetOnly(value) ||
                                   value.length > 20) {
                                 return 'Not a valid Last Name';
+                              } else {
+                                _fullName = "${_fullName ?? ""}${" $value"}";
+                                return null;
                               }
-                              _fullName += " $value";
-                              return null;
                             },
                             textAlign: TextAlign.center,
                             keyboardType: TextInputType.text,
@@ -90,11 +98,14 @@ class RegisterView extends GetView<RegisterController> {
                   child: TextFormField(
                     textInputAction: TextInputAction.next,
                     validator: (value) {
-                      if (!GetUtils.isEmail(value)) {
+                      if (value == null) {
+                        return 'Please enter a Name';
+                      } else if (!GetUtils.isEmail(value)) {
                         return 'Please enter a valid email-address';
+                      } else {
+                        _email = value;
+                        return null;
                       }
-                      _email = value;
-                      return null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     keyboardType: TextInputType.emailAddress,
@@ -175,28 +186,33 @@ class RegisterView extends GetView<RegisterController> {
                   text: 'Sign Up',
                   icon: Icons.lock_open,
                   onPressed: () async {
-                    if (_formKey.currentState.validate()) {
-                      final LocationData locationData =
-                          await sendLocationData();
-                      controller.signUp(
-                        username: _fullName,
-                        phonenum: int.parse(_phoneNum),
-                        email: _email,
-                        password: _password,
-                        longitude: locationData.longitude,
-                        latitude: locationData.latitude,
-                      );
-                    } else {}
+                    if (_formKey.currentState!.validate()) {
+                      final locationData = await sendLocationData();
+                      if (locationData.latitude == null ||
+                          locationData.longitude == null) {
+                        throw Failure("Location is not provided properly");
+                      } else {
+                        controller.signUp(
+                          username: _fullName!,
+                          phonenum: int.parse(_phoneNum!),
+                          email: _email!,
+                          password: _password!,
+                          longitude: locationData.longitude!,
+                          latitude: locationData.latitude!,
+                        );
+                      }
+                    }
                   },
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: "Ngrok ID"),
                   validator: (value) {
-                    if (value.isBlank) {
+                    if (value == null) {
                       return 'Please enter a ngrok id';
+                    } else {
+                      baseUrl = "https://$value.ngrok.io";
+                      return null;
                     }
-                    baseUrl = "https://$value.ngrok.io";
-                    return null;
                   },
                 )
               ],

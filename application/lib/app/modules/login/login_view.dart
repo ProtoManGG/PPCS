@@ -13,9 +13,10 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     final double width = Get.width;
     final double height = Get.height;
-    String _email;
-    String _password;
+    String? _email;
+    String? _password;
     final RxBool _showPassword = false.obs;
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.symmetric(
@@ -46,6 +47,9 @@ class LoginView extends GetView<LoginController> {
                     child: TextFormField(
                       textInputAction: TextInputAction.next,
                       validator: (value) {
+                        if (value == null) {
+                          return 'Please enter an email-address';
+                        }
                         if (!GetUtils.isEmail(value)) {
                           return 'Please enter a valid email-address';
                         }
@@ -97,7 +101,7 @@ class LoginView extends GetView<LoginController> {
                       return const SizedBox.shrink();
                     },
                     onLoading: const Center(child: CircularProgressIndicator()),
-                    onError: (error) => Text(error),
+                    onError: (error) => Text(error!),
                     onEmpty: const Text('Press the button 👇'),
                   ),
                   Button(
@@ -105,9 +109,12 @@ class LoginView extends GetView<LoginController> {
                     text: 'Log In',
                     icon: Icons.lock_open,
                     onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        controller.login(email: _email, password: _password);
-                      } else {}
+                      if (_formKey.currentState!.validate()) {
+                        controller.login(
+                          email: _email!,
+                          password: _password!,
+                        );
+                      }
                     },
                   ),
                   Button(
@@ -117,14 +124,27 @@ class LoginView extends GetView<LoginController> {
                     onPressed: () => Get.toNamed(Routes.REGISTER),
                   ),
                   TextFormField(
-                    decoration: const InputDecoration(labelText: "Ngrok ID"),
                     validator: (value) {
-                      if (value.isBlank) {
+                      if (value == null) {
                         return 'Please enter a ngrok id';
                       }
                       baseUrl = "https://$value.ngrok.io";
                       return null;
                     },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    keyboardType: TextInputType.emailAddress,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20),
+                    decoration: style.kInputDecoration.copyWith(
+                      hintText: '**/*/***/*',
+                      labelText: 'Ngrok ID',
+                      suffixIcon: IconButton(
+                        icon: _showPassword.value
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                        onPressed: () => _showPassword.toggle(),
+                      ),
+                    ),
                   )
                 ],
               ),

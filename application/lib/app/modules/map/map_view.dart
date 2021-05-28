@@ -46,8 +46,8 @@ class MapView extends GetView<MapController> {
                 GoogleMap(
                   initialCameraPosition: CameraPosition(
                     target: LatLng(
-                      controller.locationData.latitude,
-                      controller.locationData.longitude,
+                      controller.locationData!.latitude!,
+                      controller.locationData!.longitude!,
                     ),
                     zoom: 12,
                   ),
@@ -56,8 +56,8 @@ class MapView extends GetView<MapController> {
                   circles: Set<Circle>.of(controller.circleList.values),
                   myLocationEnabled: true,
                   markers: {
-                    if (controller.origin != null) controller.origin,
-                    if (controller.destination != null) controller.destination
+                    if (controller.origin != null) controller.origin!,
+                    if (controller.destination != null) controller.destination!
                   },
                   onLongPress: controller.addMarker,
                   polylines: controller.polyLines,
@@ -106,7 +106,7 @@ class MapView extends GetView<MapController> {
                   onPressed: controller.onInit,
                   icon: const Icon(Icons.refresh),
                 ),
-                Text(error),
+                Text(error!),
               ],
             ),
             onLoading: const CircularProgressIndicator(),
@@ -126,8 +126,8 @@ class MapView extends GetView<MapController> {
               final _storage = StorageService().instance;
 
               return _sttController.listen(
-                accessToken: await _storage.box.read(storageKey),
-                origin: controller.locationData,
+                accessToken: _storage.box.read<String>(storageKey)!,
+                origin: controller.locationData!,
               );
             },
             child: Icon(

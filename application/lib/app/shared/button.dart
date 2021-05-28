@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   const Button({
-    Key key,
-    @required this.isTextOnly,
-    @required this.text,
-    @required this.onPressed,
+    Key? key,
+    required this.isTextOnly,
+    required this.text,
+    required this.onPressed,
     this.icon,
     this.color = Colors.lightBlueAccent,
   }) : super(key: key);
@@ -13,7 +13,7 @@ class Button extends StatelessWidget {
   final bool isTextOnly;
   final String text;
   final Color color;
-  final IconData icon;
+  final IconData? icon;
   final Function onPressed;
 
   @override

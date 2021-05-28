@@ -1,27 +1,26 @@
-import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 import '../providers/api_client.dart';
 
 class Repository {
+  Repository({required this.apiClient});
+
   final ApiClient apiClient;
 
-  Repository({@required this.apiClient}) : assert(apiClient != null);
-
   Future login({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async =>
       apiClient.login(email: email, password: password);
 
   Future signUp({
-    @required String username,
-    @required String email,
-    @required String password,
-    @required double latitude,
-    @required double longitude,
-    @required int phonenum,
+    required String username,
+    required String email,
+    required String password,
+    required double latitude,
+    required double longitude,
+    required int phonenum,
   }) async =>
       apiClient.signUp(
         username: username,
@@ -33,9 +32,9 @@ class Repository {
       );
 
   Future getHotSpotZones({
-    @required double latitude,
-    @required double longitude,
-    @required String accessToken,
+    required double latitude,
+    required double longitude,
+    required String accessToken,
   }) async {
     return apiClient.getHotSpotZones(
       latitude: latitude,
@@ -45,9 +44,9 @@ class Repository {
   }
 
   Future getRoutes({
-    @required Marker origin,
-    @required Marker destination,
-    @required String accessToken,
+    required Marker origin,
+    required Marker destination,
+    required String accessToken,
   }) async {
     return apiClient.getRoutes(
       origin: origin,
@@ -57,9 +56,9 @@ class Repository {
   }
 
   Future searchRoute({
-    @required String route,
-    @required LocationData origin,
-    @required String accessToken,
+    required String route,
+    required LocationData origin,
+    required String accessToken,
   }) {
     return apiClient.searchRoute(
       route: route,
