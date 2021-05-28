@@ -189,7 +189,7 @@ async def get_covid_hotspot(action : Action):
         access_token = create_access_token(
             data={"sub": user['sub']}, expires_delta=access_token_expires
         )
-        return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
+        return {"coronaHotspot":return_data,"crowdHotspot":crowd_data,"access_token":access_token}
 
 # @app.post("/route")
 # async def get_covid_hotspot(action : Route):
