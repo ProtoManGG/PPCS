@@ -1,20 +1,3 @@
-<head>
-  <style>
-  .container {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.container .image {
-  width: auto;
-}
-
-.container img {
-  width: calc(100% - (20px * 2));
-  margin: 1px;
-}
-  </style>
-</head>
 # 🦠**PPCS: Post Pandemic Crowd Safety** 💉😷
 
 ## 🤔❓ **_Impact of COVID-19 In India_** 🙋‍♂️🙋‍♀️
@@ -44,24 +27,14 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 
 ## 📺 _**Demo Gif**_
 
-<div class="container">
-  <div class="image">
-<img src="./extras/videos/_hotspot.gif" alt="Detect Hotspot Zones" width="40%" />
-<h4>Detect Hotspot Zones</h4>
-  </div>
-  <div class="image">
-<img src="./extras/videos/_route.gif" alt="Safest Route Detection" width="40%" />
-<h4>Safest Route Detection</h4>
-  </div>
-  <div class="image">
-<img src="./extras/videos/_error.gif" alt="Easy Errors" width="40%" />
-<h4>Easy Errors</h4>
-  </div>
-  <div class="image">
-<img src="./extras/videos/_voice.gif" alt="Voice Search" width="40%" />
-<h4>Voice Search</h4>
-  </div>
-</div>
+#### 😼 Hotspot Zone Detection & Safest Route Detection
+
+<img src="./extras/videos/_hotspot.gif" alt="Detect Hotspot Zones" 
+width="40%" /><img src="./extras/videos/_route.gif" alt="Safest Route Detection" width="40%" />
+
+#### 🚧 Easy Errors for UX & Voice Search for ease of access
+
+<img src="./extras/videos/_error.gif" alt="Easy Errors" width="40%" /><img src="./extras/videos/_voice.gif" alt="Voice Search" width="40%" />
 
 ## ⚙ **Core Features:**
 
@@ -76,6 +49,10 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 ### 🕵️‍♂️ Detecting Crowded Zones
 
 - The organized data is further retrieved and algorithmically analyzed for detecting the hazardous zones
+
+### 🚏 Safest Route Detection
+
+- The server provides safest routes for an end user to travel via
 
 ## ✨**Special Features:**
 
