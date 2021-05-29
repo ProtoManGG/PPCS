@@ -5,27 +5,29 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:getx_ecosystem_trial/app/data/models/corona_hotspot_model.dart';
+import 'package:getx_ecosystem_trial/app/data/models/crowd_hotspot_model.dart';
+import 'package:getx_ecosystem_trial/app/data/models/hotspot_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 import '../../constants/constants.dart';
 import '../../data/models/failure_model.dart';
-import '../../data/models/hotspot_model.dart';
 import '../../data/repository/repository.dart';
 import '../../services/services.dart';
 import '../../shared/info_dialog.dart';
 import '../../shared/location_data_sender.dart';
 
 class MapController extends GetxController with StateMixin {
-  MapController({@required this.repository});
+  MapController({required this.repository});
   final Repository repository;
 
-  String _mapStyle;
-  GoogleMapController mapController;
-  Marker origin;
-  Marker destination;
-  LocationData locationData;
-  HotSpotModel hotspotList;
+  String? _mapStyle;
+  GoogleMapController? mapController;
+  Marker? origin;
+  Marker? destination;
+  LocationData? locationData;
+  HotspotModel? hotspotModel;
   final circleList = HashMap<CircleId, Circle>();
   final Completer<GoogleMapController> _controller = Completer();
   final List<LatLng> polyPoints = [];
@@ -43,30 +45,39 @@ class MapController extends GetxController with StateMixin {
   void onMapCreated(GoogleMapController controller) {
     if (!_controller.isCompleted) _controller.complete(controller);
     mapController = controller;
-    mapController.setMapStyle(_mapStyle);
+    mapController?.setMapStyle(_mapStyle);
   }
 
   Future<void> getHotspotList() async {
     change("Loading", status: RxStatus.loading());
     locationData = await sendLocationData();
 
-    if (!locationData.isBlank) {
-      try {
-        final _storage = StorageService().instance;
-        final body = await repository.getHotSpotZones(
-          latitude: locationData.latitude,
-          longitude: locationData.longitude,
-          accessToken: await _storage.box.read(storageKey),
-        );
-        hotspotList = HotSpotModel.fromJson(body as Map<String, dynamic>);
-        _storage.box.write(storageKey, body["access_token"]);
-      } on Failure catch (f) {
-        change("Failure", status: RxStatus.error(f.toString()));
+    try {
+      final _storage = StorageService().instance;
+      if (locationData?.latitude == null ||
+          locationData?.longitude == null ||
+          _storage.box.read<String>(storageKey) == null) {
+        throw Failure("Location data is not provided");
       }
+      final body = await repository.getHotSpotZones(
+        latitude: locationData!.latitude!,
+        longitude: locationData!.longitude!,
+        accessToken: _storage.box.read<String>(storageKey)!,
+      );
+      hotspotModel = HotspotModel.fromJson(body as Map<String, dynamic>);
+      if (hotspotModel == null) {
+        throw Failure("No Hotspots received from server");
+      }
+      _storage.box.write(storageKey, body["access_token"]);
+    } on Failure catch (f) {
+      change("Failure", status: RxStatus.error(f.toString()));
+    }
 
-      for (final CoronaHotspot element in hotspotList.coronaHotspot) {
+    if (hotspotModel!.coronaHotspot.isNotEmpty) {
+      for (final CoronaHotspotModel element in hotspotModel!.coronaHotspot) {
         final circleId =
-            CircleId(hotspotList.coronaHotspot.indexOf(element).toString());
+            CircleId(hotspotModel!.coronaHotspot.indexOf(element).toString());
+
         circleList[circleId] = Circle(
           circleId: circleId,
           center: LatLng(element.lat, element.long),
@@ -77,7 +88,7 @@ class MapController extends GetxController with StateMixin {
           consumeTapEvents: true,
           onTap: () async {
             Get.defaultDialog(
-              title: '${element.lat},${element.long}',
+              title: '🦠 Hotspot Info',
               content: Column(
                 children: [
                   InfoDialog(
@@ -101,10 +112,14 @@ class MapController extends GetxController with StateMixin {
           },
         );
       }
+    }
 
-      for (final CrowdHotspot element in hotspotList.crowdHotspot) {
+    if (hotspotModel!.crowdHotspot.isNotEmpty) {
+      for (final CrowdHotspotModel element
+          in hotspotModel?.crowdHotspot ?? []) {
         final circleId =
-            CircleId(hotspotList.crowdHotspot.indexOf(element).toString());
+            CircleId(hotspotModel!.crowdHotspot.indexOf(element).toString());
+
         circleList[circleId] = Circle(
           circleId: circleId,
           center: LatLng(element.lat, element.long),
@@ -113,8 +128,8 @@ class MapController extends GetxController with StateMixin {
           strokeColor: Colors.black45.withOpacity(0.2),
         );
       }
-      change("Success", status: RxStatus.success());
     }
+    change("Success", status: RxStatus.success());
   }
 
   Future<void> addMarker(LatLng pos) async {
@@ -122,7 +137,7 @@ class MapController extends GetxController with StateMixin {
       change("Loading", status: RxStatus.loading());
 
       origin = Marker(
-        markerId: MarkerId('origin'),
+        markerId: const MarkerId('origin'),
         infoWindow: const InfoWindow(title: 'Origin'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         position: pos,
@@ -133,7 +148,7 @@ class MapController extends GetxController with StateMixin {
       change("Loading", status: RxStatus.loading());
 
       destination = Marker(
-        markerId: MarkerId('destination'),
+        markerId: const MarkerId('destination'),
         infoWindow: const InfoWindow(title: 'Destination'),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
         position: pos,
@@ -148,10 +163,15 @@ class MapController extends GetxController with StateMixin {
     polyPoints.clear();
     try {
       final _storage = StorageService().instance;
+      if (origin == null ||
+          destination == null ||
+          _storage.box.read<String>(storageKey) == null) {
+        throw Failure("Location data is not provided");
+      }
       final body = await repository.getRoutes(
-        origin: origin,
-        destination: destination,
-        accessToken: await _storage.box.read(storageKey),
+        origin: origin!,
+        destination: destination!,
+        accessToken: _storage.box.read<String>(storageKey)!,
       );
       if (body["route"] is String) {
         log(body["route"] as String);
@@ -163,15 +183,19 @@ class MapController extends GetxController with StateMixin {
           ));
         }
 
-        polyLines.add(Polyline(
-          polylineId: PolylineId("polyline"),
-          points: polyPoints,
-        ));
+        polyLines.add(
+          Polyline(
+            polylineId: const PolylineId("polyline"),
+            points: polyPoints,
+            color: Colors.blueAccent,
+            width: 5,
+          ),
+        );
 
         // final Completer<GoogleMapController> _controller = Completer();
         // if (!_controller.isCompleted) _controller.complete(gcontroller);
         // mapController = await _controller.future;
-        mapController.animateCamera(
+        mapController?.animateCamera(
           CameraUpdate.newLatLngBounds(
             LatLngBounds(
               southwest: LatLng(

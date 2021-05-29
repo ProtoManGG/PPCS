@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../constants/constants.dart';
@@ -8,13 +7,13 @@ import '../../services/services.dart';
 
 class LoginController extends GetxController with StateMixin {
   final Repository repository;
-  LoginController({@required this.repository}) {
+  LoginController({required this.repository}) {
     change("Initial", status: RxStatus.empty());
   }
 
   Future<void> login({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     try {
       change('Loading', status: RxStatus.loading());

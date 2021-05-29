@@ -9,3 +9,8 @@ linter:
 
     # Use parameter order as in json response
     constant_identifier_names: false
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"

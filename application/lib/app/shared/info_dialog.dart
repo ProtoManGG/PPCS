@@ -7,10 +7,10 @@ class InfoDialog extends StatelessWidget {
   final String imagePath;
   final int hotspotInfo;
   const InfoDialog({
-    Key key,
-    @required this.title,
-    @required this.imagePath,
-    @required this.hotspotInfo,
+    Key? key,
+    required this.title,
+    required this.imagePath,
+    required this.hotspotInfo,
   }) : super(key: key);
 
   @override

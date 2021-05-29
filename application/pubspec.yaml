@@ -6,26 +6,31 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.13.0 <3.0.0"
 
 dependencies:
+  avatar_glow: ^2.0.1
   cupertino_icons: ^1.0.0
-  dio: ^3.0.10
+  dio: ^4.0.0
   flutter:
     sdk: flutter
-  flutter_svg:
-  get: ^3.24.0
-  get_storage: ^1.4.0
-  google_maps_flutter: ^1.0.6
-  google_maps_flutter_web: ^0.1.0+8
-  # search_map_place: ^0.3.0
-  location: ^3.2.1
+  flutter_svg: ^0.22.0
+  freezed_annotation: ^0.14.2
+  get: ^4.1.4
+  get_storage: ^2.0.2
+  google_maps_flutter: ^2.0.6
+  google_maps_flutter_web: ^0.3.0
+  location: ^4.1.1
+  speech_to_text: ^4.1.1-nullsafety
 
 dev_dependencies:
-  flutter_launcher_icons:
+  build_runner: ^2.0.4
+  flutter_launcher_icons: ^0.9.0
   flutter_test:
     sdk: flutter
-  lint: ^1.3.0
+  freezed: ^0.14.2
+  json_serializable: ^4.1.3
+  lint: ^1.5.3
 
 flutter:
   uses-material-design: true
