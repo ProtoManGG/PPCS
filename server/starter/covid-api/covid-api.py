@@ -73,6 +73,22 @@ class Route(BaseModel):
     longi_to : float
     access_token : str
 
+class Searchroute(BaseModel):
+    lat_from : float
+    longi_from : float
+    address : str
+    access_token : str
+
+
+def getCoords(address,KEY):
+    req = requests.get(f"https://api.openrouteservice.org/geocode/search?api_key={KEY}&text={address}")
+    try:
+        RES = req.json()["features"][0]["geometry"]["coordinates"]
+        return True,RES[0],RES[1]
+    except:
+        return False,0,0
+
+
 def add_user(user_tuple):
     sql = "INSERT INTO User_Data (username,phone_no,password,email,lat,long) VALUES(%s,%s,%s,%s,%s,%s)"
     cursor.execute(sql,user_tuple)
@@ -176,7 +192,7 @@ async def get_covid_hotspot(action : Action):
         access_token = create_access_token(
             data={"sub": user['sub']}, expires_delta=access_token_expires
         )
-        return {"corona_hotspot":return_data,"crowd_hotspot":crowd_data,"access_token":access_token}
+        return {"coronaHotspot":return_data,"crowdHotspot":crowd_data,"access_token":access_token}
 
 # @app.post("/route")
 # async def get_covid_hotspot(action : Route):
@@ -238,7 +254,49 @@ async def get_covid_hotspot(action : Route):
         route=res["features"][0]["geometry"]["coordinates"]
         return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
     except Exception as e:
-        return {"route":"No Routes Found !!","error_message":e}
+        return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
+    
+
+
+
+
+@app.post("/searchroute")
+async def get_covid_hotspot(action : Searchroute):
+    user = jwt.decode(action.access_token,key=SECRET_KEY,algorithms=ALGORITHM)
+    cursor.execute(f"SELECT email FROM User_Data WHERE email = '{user['sub']}'")
+    user_db = cursor.fetchall()
+    if user_db  == []:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="You are not Authorized",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    update_user(action.lat_from,action.longi_from,user['sub'])
+
+    access_token_expires = timedelta(hours=ACCESS_TOKEN_EXPIRE_HOURS)
+    access_token = create_access_token(
+        data={"sub": user['sub']}, expires_delta=access_token_expires
+    )
+    KEY_ORS="5b3ce3597851110001cf62489c708b292d2e4547a7742c6cd864245e"
+    check,longi_to,lat_to = getCoords(action.address,KEY_ORS)
+    if check:
+        headers = {
+        'Accept': 'application/json, application/geo+json, application/gpx+xml, img/png; charset=utf-8',
+        }
+        
+        call = requests.get(f'https://api.openrouteservice.org/v2/directions/driving-car?api_key={KEY_ORS}&start={action.longi_from},{action.lat_from}&end={longi_to},{lat_to}', headers=headers)
+
+
+        res=call.json()
+        try:
+            bbox=res["features"][0]["bbox"]  
+            boundingBox={"lr":{"lng":bbox[0],"lat":bbox[1]},"ul":{"lng":bbox[2],"lat":bbox[3]}}  
+            route=res["features"][0]["geometry"]["coordinates"]
+            return {"route":route,"boundingBox":boundingBox,"access_token":access_token}
+        except Exception as e:
+            return {"route":"No Routes Found !!","error_message":e,"access_token":access_token}
+    else:
+        return {"route":"No Routes Found !!","access_token":access_token}
     
 
 
