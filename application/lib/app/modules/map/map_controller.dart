@@ -88,7 +88,7 @@ class MapController extends GetxController with StateMixin {
           consumeTapEvents: true,
           onTap: () async {
             Get.defaultDialog(
-              title: '${element.lat},${element.long}',
+              title: '🦠 Hotspot Info',
               content: Column(
                 children: [
                   InfoDialog(
@@ -183,10 +183,14 @@ class MapController extends GetxController with StateMixin {
           ));
         }
 
-        polyLines.add(Polyline(
-          polylineId: const PolylineId("polyline"),
-          points: polyPoints,
-        ));
+        polyLines.add(
+          Polyline(
+            polylineId: const PolylineId("polyline"),
+            points: polyPoints,
+            color: Colors.blueAccent,
+            width: 5,
+          ),
+        );
 
         // final Completer<GoogleMapController> _controller = Completer();
         // if (!_controller.isCompleted) _controller.complete(gcontroller);

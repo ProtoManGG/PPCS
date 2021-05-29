@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getx_ecosystem_trial/app/constants/storage_constants.dart';
 import 'package:getx_ecosystem_trial/app/data/models/failure_model.dart';
-import 'package:getx_ecosystem_trial/app/data/providers/api_client.dart';
 import 'package:getx_ecosystem_trial/app/services/storage_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -15,19 +15,14 @@ import 'map_controller.dart';
 
 class SttController extends GetxController with StateMixin {
   SttController(this.repository);
+  final searchController = TextEditingController().obs;
 
-  final _mapController = Get.put(
-    MapController(
-      repository: Repository(
-        apiClient: ApiClient(),
-      ),
-    ),
-  );
+  final _mapController = Get.find<MapController>();
 
   final Repository repository;
 
   final isListening = false.obs;
-  final speechText = 'Press the mic button and start speaking'.obs;
+  // final speechText = 'Press the mic button and start speaking'.obs;
 
   SpeechToText? speechToText;
 
@@ -35,6 +30,7 @@ class SttController extends GetxController with StateMixin {
   void onInit() {
     super.onInit();
     speechToText = SpeechToText();
+    change("Init", status: RxStatus.empty());
   }
 
   Future<void> listen({
@@ -42,37 +38,31 @@ class SttController extends GetxController with StateMixin {
     required String accessToken,
   }) async {
     if (!isListening.value) {
-      bool _isCalledOnce = false;
       isListening.value = true;
       final bool available = await speechToText?.initialize(
-            finalTimeout: const Duration(seconds: 1),
-            onStatus: (status) async {
-              debugPrint(status);
-              if (status == 'notListening' && _isCalledOnce != true) {
-                _isCalledOnce = true;
-                isListening.value = false;
-                debugPrint(speechText.value);
-                await searchRoute(
-                  route: speechText.value,
-                  origin: origin,
-                  accessToken: accessToken,
-                );
-                speechText.value = "";
-                speechToText?.stop();
-              }
-            },
             onError: (errorNotification) {
               debugPrint("error $errorNotification");
               isListening.value = false;
               speechToText?.stop();
-              speechText.value = "";
+              searchController.value.text = "";
             },
           ) ??
           false;
       if (available) {
         isListening.value = true;
         speechToText?.listen(
-          onResult: (result) => speechText.value = result.recognizedWords,
+          onResult: (result) async {
+            if (result.finalResult) {
+              searchController.value.text = result.recognizedWords;
+              await searchRoute(
+                route: searchController.value.text,
+                origin: origin,
+                accessToken: accessToken,
+              );
+            } else {
+              print("1");
+            }
+          },
         );
       } else {
         isListening.value = false;
@@ -81,13 +71,6 @@ class SttController extends GetxController with StateMixin {
     } else {
       speechToText?.cancel();
       isListening.value = false;
-      // debugPrint(speechText.value);
-      // speechText.value = "";
-      // await searchRoute(
-      //   route: speechText.value,
-      //   origin: origin,
-      //   accessToken: accessToken,
-      // );
     }
   }
 
@@ -114,6 +97,7 @@ class SttController extends GetxController with StateMixin {
       );
       if (body["route"] is String) {
         log(body["route"] as String);
+        throw Failure(body["route"] as String);
       } else {
         for (var i = 0; i < (body["route"] as List).length; i++) {
           _mapController.polyPoints.add(LatLng(
@@ -125,6 +109,8 @@ class SttController extends GetxController with StateMixin {
         _mapController.polyLines.add(Polyline(
           polylineId: const PolylineId("polyline"),
           points: _mapController.polyPoints,
+          color: Colors.blueAccent,
+          width: 5,
         ));
 
         // final Completer<GoogleMapController> _controller = Completer();

@@ -13,16 +13,11 @@ import 'map_controller.dart';
 import 'stt_controller.dart';
 
 class MapView extends GetView<MapController> {
+  final _sttController = Get.put(
+    SttController(Repository(apiClient: ApiClient())),
+  );
   @override
   Widget build(BuildContext context) {
-    final _sttController = Get.put(
-      SttController(
-        Repository(
-          apiClient: ApiClient(),
-        ),
-      ),
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Hotspots Near You 😷"),
@@ -43,24 +38,93 @@ class MapView extends GetView<MapController> {
           child: controller.obx(
             (state) => Stack(
               children: [
-                GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      controller.locationData!.latitude!,
-                      controller.locationData!.longitude!,
+                _sttController.obx(
+                  (state) => GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        controller.locationData!.latitude!,
+                        controller.locationData!.longitude!,
+                      ),
+                      zoom: 12,
                     ),
-                    zoom: 12,
+                    onMapCreated: (GoogleMapController gcontroller) =>
+                        controller.onMapCreated(gcontroller),
+                    circles: Set<Circle>.of(controller.circleList.values),
+                    myLocationEnabled: true,
+                    markers: {
+                      if (controller.origin != null) controller.origin!,
+                      if (controller.destination != null)
+                        controller.destination!
+                    },
+                    onLongPress: controller.addMarker,
+                    polylines: controller.polyLines,
                   ),
-                  onMapCreated: (GoogleMapController gcontroller) =>
-                      controller.onMapCreated(gcontroller),
-                  circles: Set<Circle>.of(controller.circleList.values),
-                  myLocationEnabled: true,
-                  markers: {
-                    if (controller.origin != null) controller.origin!,
-                    if (controller.destination != null) controller.destination!
+                  onEmpty: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        controller.locationData!.latitude!,
+                        controller.locationData!.longitude!,
+                      ),
+                      zoom: 12,
+                    ),
+                    onMapCreated: (GoogleMapController gcontroller) =>
+                        controller.onMapCreated(gcontroller),
+                    circles: Set<Circle>.of(controller.circleList.values),
+                    myLocationEnabled: true,
+                    markers: {
+                      if (controller.origin != null) controller.origin!,
+                      if (controller.destination != null)
+                        controller.destination!
+                    },
+                    onLongPress: controller.addMarker,
+                    polylines: controller.polyLines,
+                  ),
+                  onError: (error) {
+                    WidgetsBinding.instance!.addPostFrameCallback(
+                      (_) {
+                        Get.snackbar(
+                          "Oops",
+                          error.toString(),
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.redAccent,
+                          titleText: const Text(
+                            "Oh No!",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          messageText: Text(
+                            error.toString(),
+                            style: const TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                    return GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                          controller.locationData!.latitude!,
+                          controller.locationData!.longitude!,
+                        ),
+                        zoom: 12,
+                      ),
+                      onMapCreated: (GoogleMapController gcontroller) =>
+                          controller.onMapCreated(gcontroller),
+                      circles: Set<Circle>.of(controller.circleList.values),
+                      myLocationEnabled: true,
+                      markers: {
+                        if (controller.origin != null) controller.origin!,
+                        if (controller.destination != null)
+                          controller.destination!
+                      },
+                      onLongPress: controller.addMarker,
+                      polylines: controller.polyLines,
+                    );
                   },
-                  onLongPress: controller.addMarker,
-                  polylines: controller.polyLines,
+                  onLoading: const Center(child: CircularProgressIndicator()),
                 ),
                 Align(
                   alignment: Alignment.topCenter,
@@ -68,32 +132,49 @@ class MapView extends GetView<MapController> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(50),
                         border: Border.all(width: 2),
                         color: Colors.white,
                       ),
                       height: 50,
                       width: Get.width * 0.7,
-                      child: Obx(
-                        () => Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Center(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Text(
-                                _sttController.speechText.value.capitalize ??
-                                    "Listening...",
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Obx(
+                              () => TextFormField(
+                                controller:
+                                    _sttController.searchController.value,
+                                decoration: const InputDecoration(
+                                  border: InputBorder.none,
+                                ),
                                 textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
+                                // overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                          IconButton(
+                            onPressed: () async {
+                              final _storage = StorageService().instance;
+                              await _sttController.searchRoute(
+                                route:
+                                    _sttController.searchController.value.text,
+                                origin: controller.locationData!,
+                                accessToken:
+                                    _storage.box.read<String>(storageKey)!,
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.search,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -130,8 +211,18 @@ class MapView extends GetView<MapController> {
                 origin: controller.locationData!,
               );
             },
-            child: Icon(
-              _sttController.isListening.value ? Icons.mic : Icons.mic_none,
+            child: _sttController.obx(
+              (state) => Icon(
+                _sttController.isListening.value ? Icons.mic : Icons.mic_none,
+              ),
+              onEmpty: Icon(
+                _sttController.isListening.value ? Icons.mic : Icons.mic_none,
+              ),
+              onError: (error) => Icon(
+                _sttController.isListening.value ? Icons.mic : Icons.mic_none,
+                color: Colors.redAccent,
+              ),
+              onLoading: const CircularProgressIndicator(),
             ),
           ),
         ),

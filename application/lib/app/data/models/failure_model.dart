@@ -9,5 +9,6 @@ class Failure {
   Failure(this.message, {this.statusCode});
 
   @override
-  String toString() => "😐 $statusCode : $message";
+  String toString() =>
+      statusCode != null ? '😐 $statusCode: $message' : '😱  $message';
 }
