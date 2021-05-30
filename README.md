@@ -27,12 +27,12 @@ Coronavirus disease (COVID-19) pandemic has spread to 198 countries, with approx
 
 ## 📺 _**Demo Gif**_
 
-#### 😼 Hotspot Zone Detection & Safest Route Detection
+#### 😼  Hotspot Zone Detection & Safest Route Detection
 
 <img src="./extras/videos/_hotspot.gif" alt="Detect Hotspot Zones" 
 width="40%" /><img src="./extras/videos/_route.gif" alt="Safest Route Detection" width="40%" />
 
-#### 🚧 Easy Errors for UX & Voice Search for ease of access
+#### 🚧  Easy Errors for UX & Voice Search for ease of access
 
 <img src="./extras/videos/_error.gif" alt="Easy Errors" width="40%" /><img src="./extras/videos/_voice.gif" alt="Voice Search" width="40%" />
 
