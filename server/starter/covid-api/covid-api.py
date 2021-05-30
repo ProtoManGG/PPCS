@@ -120,6 +120,21 @@ def get_full_address(lat,longi):
     res = requests.get(reverse_url)
     return res.json()["items"][0]["address"]["label"]
 
+
+def get_safest_route(Route_list, lat, longi):
+    proxy = 0.005
+    hotspot_zones = [0]*len(Route_list)
+    for route_index in range(Route_list):
+        for lat,longi in Route_list[route_index]:
+            query = f"SELECT lat,long,death,active,recovered FROM Hotspot WHERE (lat BETWEEN {lat-proxy} AND {lat+proxy}) AND (long BETWEEN {longi-proxy} AND {longi+proxy})"
+            cursor.execute(query)
+            Hotspots_nearby = cursor.fetchall()
+            if len(Hotspots_nearby)>1:
+                hotspot_zones[route_index]+=1
+    ## Returns the safest route
+    return Route_list[hotspot_zones.index(min(hotspot_zones))]
+
+
 def clean_routes(shapePoints):
     route = []
     i=0
